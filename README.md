@@ -1,148 +1,131 @@
-# contest2026_236_wuxianshanyaoqiji
+# 妖气迹 · NFC 二次元互动终端（Microchip R528 / Gemini-S1）
 
-👋 欢迎参加 **2026 首届 openvela AI 硬件开发者大赛**！
-
-这是组委会为你的队伍创建的**专属参赛仓库**（本仓为样例/模板，队伍编号 `236`；你看到的将是你自己的 `contest2026_<编号>_<队伍名>`）。比赛期间，你的全部参赛代码、打包产物与 AI Coding 日志都提交到这里。
-
-> 本仓既是「代码仓」，又内置了一键拉取整套 openvela 工程的 `repo` 清单（manifest）。你只需跟它打交道，**自始至终只动一个文件夹**。
+> **队伍：236 无险山妖气迹**
+> **赛道：AI 硬件产品创新**
+> **目标硬件：微芯润 Gemini 开发板（openvela AI 硬件开发者大赛指定硬件，R528S3 / Cortex-A7）**
 
 ---
-
-## 一、先读这些官方文档
-
-**通用（所有赛道必读）：**
-
-| 文档                                                                                                                                     | 用途                                           |
-| ---------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| [《大赛总览》](https://github.com/open-vela/docs/blob/dev-ai-contest-2026/zh-cn/contest_2026/contest_overview.md)                        | 赛道、流程、评分、资源，建议先通读             |
-| [《参赛代码提交指南》](https://github.com/open-vela/docs/blob/dev-ai-contest-2026/zh-cn/contest_2026/code_submission_guide.md)           | 仓库获取、提交流程、时间与权限（**以此为准**） |
-| [《AI Coding 日志归集与提交手册》](https://github.com/open-vela/docs/blob/dev-ai-contest-2026/zh-cn/contest_2026/ai_coding_log_guide.md) | 如何导出 AI 对话日志并提交到 `logs/`           |
-
-**按你的赛道选读（三选一）：**
-
-| 赛道                  | 教程导航                                                                                                                                                 |
-| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 快应用 / 手表应用创新 | [快应用教程导航](https://github.com/open-vela/docs/blob/dev-ai-contest-2026/zh-cn/contest_2026/quickapp/quickapp_guide_index.md)                         |
-| AI 硬件产品创新       | [AI 硬件赛道教程导航](https://github.com/open-vela/docs/blob/dev-ai-contest-2026/zh-cn/contest_2026/ai_hardware/ai_hardware_guide_index.md)              |
-| 新硬件适配            | [新硬件适配赛道教程导航](https://github.com/open-vela/docs/blob/dev-ai-contest-2026/zh-cn/contest_2026/hardware_porting/hardware_porting_guide_index.md) |
-
----
-
-## 二、第一步：拉取完整工程
-
-用组委会提供的命令一键拉取「openvela 全量源码 + 你的专属仓」：
-
-```bash
-repo init -u https://github.com/open-vela/contest2026_236_wuxianshanyaoqiji \
-  -b dev-ai-contest-2026 -m contest2026_236_wuxianshanyaoqiji.xml
-repo sync -c -j8
-```
-
-同步后，你的整个仓库位于工作区的 `contest2026_236_wuxianshanyaoqiji/`，openvela 全量源码在外层（`nuttx/`、`apps/`、`packages/`、`vendor/` 等）。
-
----
-
-## 三、第二步：在哪里写代码
-
-**只在自己的仓目录 `contest2026_236_wuxianshanyaoqiji/` 里开发。** 不同作品形态放在对应子目录，manifest 会通过 `<linkfile>` 把它们**软链**到 openvela 编译树该在的位置——你不用手动 copy：
-
-| 作品形态 | 你的代码放这里             | 系统自动映射到                                 |
-| -------- | -------------------------- | ---------------------------------------------- |
-| 应用     | `app/hello_app/`           | `packages/demos/contest2026_236_hello_app`     |
-| 快应用   | `quickapp/hello_quickapp/` | `packages/apps/contest2026_236_hello_quickapp` |
-| 板级适配 | `board/contest_board/`     | `vendor/openvela/boards/contest2026_236_board` |
-
-> 用不到的形态目录可以删掉；新增作品时按同样规则加子目录，并在 `contest2026_236_wuxianshanyaoqiji.xml` 里补一条 `<linkfile>` 映射即可。**生产仓库（packages/nuttx/vendor 等）零改动。**
-
-建议仓库目录约定（便于评委定位）：
-
-```text
-app/ | quickapp/ | board/   # 你的作品代码
-logs/                       # AI Coding 日志（主动导出后提交，格式见 logs/README.md）
-README.md                   # 作品说明（提交前请改成你自己的，见第六节）
-```
-
-> 仓内附带了一个 `.gitignore.example`，给出了**编译产物**等不需要进仓的文件示例。如需启用，`cp .gitignore.example .gitignore` 后按需增删即可。**注意 `logs/` 下最终导出的 AI Coding 日志必须提交，不要忽略。**
->
-> `logs/` 的目录结构与提交格式见 [logs/README.md](logs/README.md)。
-
----
-
-## 四、第三步：编译与运行
-
-编译/运行步骤随作品形态不同而不同，请参考你所在赛道的教程导航：
-
-- 快应用 / 手表应用：[快应用教程导航](https://github.com/open-vela/docs/blob/dev-ai-contest-2026/zh-cn/contest_2026/quickapp/quickapp_guide_index.md)（含模拟器与开发板部署）。
-- AI 硬件产品创新：[AI 硬件赛道教程导航](https://github.com/open-vela/docs/blob/dev-ai-contest-2026/zh-cn/contest_2026/ai_hardware/ai_hardware_guide_index.md)（环境搭建、编译烧录、Skill 开发）。
-- 新硬件适配：[新硬件适配赛道教程导航](https://github.com/open-vela/docs/blob/dev-ai-contest-2026/zh-cn/contest_2026/hardware_porting/hardware_porting_guide_index.md)（BSP 移植、最小 NSH 基线）。
-
-子目录已通过 manifest 中的 `<linkfile>` 软链进 openvela 编译树，因此构建在 openvela 工作区**根目录**（即你这个仓的上一级）进行。openvela 使用 `build.sh` 作为统一入口，接收一个 **board config 路径**作为参数：
-
-```bash
-# 进入 openvela 工作区根目录（你的仓的上一级）
-cd ..
-
-# 通用语法：第一个参数是 board config 路径，第二个参数可以是 menuconfig / distclean 等
-./build.sh <board-config-path> [menuconfig|distclean] [-j8]
-```
-
-> 具体的 board config 路径、目标产物、模拟器/真机部署方式请以你所在赛道的教程导航为准。本仓 `app/` `quickapp/` `board/` 三个示例骨架对应的 Kconfig 选项可通过 `menuconfig` 启用。
-
----
-
-## 五、第四步：提交作品
-
-1. **fork** 你的专属仓 → 开发 → `git commit` 并推送 → 向专属仓发起 **Pull Request**，可**自行 review 并合入**（无需等组委会）。
-2. **AI Coding 日志**：与 AI 工具的对话会自动记录到本机 staging（不会自动上传），需你**主动导出/打包**选定会话到仓内 `logs/` 目录后一并提交。详见[《AI Coding 日志归集与提交手册》](https://github.com/open-vela/docs/blob/dev-ai-contest-2026/zh-cn/contest_2026/ai_coding_log_guide.md)。
-3. 若需改动 **nuttx 等公共仓库**，不在本仓改，而是 fork 对应公共仓、以 PR 提交到 `dev-ai-contest-2026` 分支，由组委会 review 后合入。
-
-> ⏰ **提交作品截止：9 月 20 日**。截止后统一收回 push 权限，仍可查看 / clone。
->
-> 获奖后再按要求将作品 PR 至 openvela 上游对应仓库（走标准 PR + CI 流程）。
-
-### 关于 PR 与 CLA
-
-- 本仓所有改动通过 **Pull Request** 合入（分支保护强制，可自行合入自己的 PR）。
-- 首次贡献需在[**官网签署 CLA**](https://openvela.com/#/community/cla)；PR 上会自动跑 `cla/signature` 检查，在官网签署成功后，在 PR 评论 `/check-cla` 复检即可通过。
-
----
-
-## 六、提交前：把本 README 改成你的作品说明
-
-本文件目前是组委会给的**使用说明书**。**作品提交前，请把它替换成你自己作品的说明**，方便评委快速了解你做了什么、怎么跑起来。建议至少包含以下内容：
-
-```markdown
-# <你的作品名>
 
 ## 一、作品简介
-<一句话/一段话说明这个作品是什么、解决什么问题、亮点在哪>
+
+一款基于 **openvela** + **微芯润 Gemini 开发板** 的二次元互动桌面终端。通过 **NFC 卡片互动** 触发本地动画/语音反馈，并结合 **AI Passport** 在对话中赋予角色「记忆与个性」——让二次元角色真正「认得你、记得住你们之间的事」。
+
+一句话亮点：**刷一下 NFC，你的虚拟角色就会用带记忆的 AI 和你打招呼。**
+
+---
 
 ## 二、选题方向
-<快应用 / 手表应用创新 ｜ AI 硬件产品创新 ｜ 新硬件适配 ｜ 自定方向，并简述理由>
+
+**AI 硬件产品创新**。
+
+核心理由：
+- 面向真实硬件（Gemini-S1 开发板），输出可烧录、可独立运行的固件。
+- 结合 NFC（`RC522`/`PN532`）做低门槛实体交互，符合「二次元周边 + 智能硬件」的产品调性。
+- 集成 AI Passport，把「一次性语音对话」升级为「有记忆、有身份、可持续」的角色陪伴体验。
+
+---
 
 ## 三、目录结构
-<列出你这个仓里各目录/文件的作用，例如：>
-- `app/xxx/`        — <说明>
-- `board/xxx/`      — <说明>
-- `quickapp/xxx/`   — <说明>
-- `logs/`           — AI Coding 日志
-- `docs/` 或其他    — <说明>
 
-## 四、运行方式
-<拉取工程后，如何编译、烧录/部署、运行的完整步骤；最好能让评委照着一步步复现>
+本仓用于存放超集 openvela 编译树之外的**作品代码**，并通过 manifest `<linkfile>` 软链进编译树对应位置。
 
-## 五、AI Coding 使用说明
-<说明本作品如何借助 AI 辅助开发：
-- 在需求拆解 / 方案设计 / 编码 / 调试 / 文档等环节如何与 AI 协作；
-- AI 对开发效率或质量带来的实际帮助。
-完整对话日志见 logs/ 目录>
+```text
+contest2026_236_wuxianshanyaoqiji/
+├── app/                       # NuttX 原生应用（烧板运行）
+│   └── hello_app/             #   → 软链至 packages/demos/contest2026_236_hello_app
+├── quickapp/                  # QuickApp 应用（需 QuickApp 运行时）
+│   └── hello_quickapp/        #   → 软链至 packages/apps/contest2026_236_hello_quickapp
+├── board/                     # 板级适配（BSP）
+│   └── contest_board/         #   → 软链至 vendor/openvela/boards/contest2026_236_board
+├── docs/
+│   └── development-notes.md   # 开发记录：环境搭建 / 源码同步 / 编译踩坑
+├── logs/                      # AI Coding 日志（提交前导出）
+├── contest2026_236_wuxianshanyaoqiji.xml  # 团队 manifest
+└── openvela.xml               # openvela 工程 manifest
 ```
 
-> 提示：将会根据「作品本身 + 你的 README 说明 + `logs/` 里的 AI Coding 日志」来理解和评估你的作品，README 写清楚很重要。
+> 对应软链映射见 [contest2026_236_wuxianshanyaoqiji.xml](contest2026_236_wuxianshanyaoqiji.xml)：
+> - `app/hello_app` → `packages/demos/contest2026_236_hello_app`
+> - `quickapp/hello_quickapp` → `packages/apps/contest2026_236_hello_quickapp`
+> - `board/contest_board` → `vendor/openvela/boards/contest2026_236_board`
+
+---
+
+## 四、运行方式
+
+openvela 工程在 **WSL（Windows Subsystem for Linux, Ubuntu 24.04）** 中编译，统一通过 `build.sh` 作为入口，参数为 board config 路径。
+
+### 0. 前置环境
+
+- Windows + WSL2（Ubuntu 24.04）
+- WSL 内安装：`repo`、`git`、`build-essential`、`cmake`、`python3`（详见 `docs/development-notes.md`）
+
+### 1. 拉取源码（首次）
+
+```bash
+cd ~
+repo init -u https://github.com/open-vela/contest2026_236_wuxianshanyaoqiji \
+  -b dev-ai-contest-2026 -m contest2026_236_wuxianshanyaoqiji.xml
+repo sync -c -j4
+```
+
+### 2. 编译 Gemini-S1 固件
+
+```bash
+cd ~/openvela
+# 7 寸 MIPI 屏 NSH 基线：configs/nsh/
+# 2.8 寸 SPI 屏：      configs/nsh_minidisplay/
+./build.sh vendor/allwinnertech/boards/r528/r528s3-gemini-s1/configs/nsh/ -j8
+```
+
+> **注意**：本阶段按最小化方案，已在 `vendor/allwinnertech/boards/r528/r528s3-gemini-s1/configs/nsh/defconfig` 中关闭依赖 QuickApp 预编译库的 `CONFIG_MEDIA` / `CONFIG_FEATURE_FRAMEWORK`（原因是当前大赛分支 `libs_openvela_vela` 仓库未提供 `armv7a_cmake` 预编译库）。详见 `docs/development-notes.md`。
+
+### 3. 产物
+
+编译成功后生成：
+
+```text
+nuttx/vela.bin                                            # 可烧录二进制固件
+nuttx/nuttx                                               # ELF 调试镜像
+vendor/allwinnertech/lichee/board/r528s3/gemini-s1_nand/configs/nsh.fex
+```
+
+### 4. 打包 / 烧录
+
+```bash
+cd vendor/allwinnertech/lichee/
+source envsetup.sh
+lunch_nuttx          # 选择 r528s3-gemini-s1
+pack                 # 打包出分区镜像
+```
+
+（使用 PhoenixSuit 或配套烧录工具将镜像烧入 Gemini-S1。）
+
+---
+
+## 五、AI Coding 使用说明
+
+本项目全程借助 AI 辅助开发，主要用在以下环节：
+
+- **需求拆解与创意展开**：从「二次元 + NFC + AI Passport」一句话需求逐步澄清为可落地的功能方案与产品形态。
+- **环境搭建与排障**：WSL 损坏重建、repo 大仓同步、网络抖动、编译报错等均由 AI 协助定位并对症解决（详见 `docs/development-notes.md`）。
+- **编译适配**：定位 QuickApp 预编译库缺失根因，决定本阶段以「最小 NSH 固件」先行落地。
+
+完整对话日志见根目录 `logs/` 目录。
+
+---
+
+## 六、当前进度与规划
+
+- [x] 本地编译环境搭建（WSL + openvela 全量源码同步）
+- [x] Gemini-S1 `nsh` 目标编译出可烧录固件 `vela.bin`
+- [ ] `pack` 打包最终镜像并完成真机烧录验证
+- [ ] QuickApp 完整 UI（从官方获取 `armv7a_cmake` 预编译库后启用）
+- [ ] NFC 互动模块（`RC522`/`PN532`）接入与动画/语音反馈
+- [ ] AI Passport 接入，实现带记忆的角色对话
 
 ---
 
 ## 附：仓库命名规范
 
-`contest2026_<编号>_<队伍名>` — 编号三位零填充；队名 slug（全小写、英文/拼音、连字符）。例：`contest2026_236_wuxianshanyaoqiji`。
-（仓库由组委会统一创建，**每队仅一个仓**，无需自行命名。）
+`contest2026_<编号>_<队伍名>` — `236` 号 / 队伍 `wuxianshanyaoqiji`。

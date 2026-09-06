@@ -1,0 +1,43 @@
+# --- 敏感配置：绝不提交 ---
+webui/.env
+*.env.local
+.env
+.env.*
+!*.env.example
+
+# --- 依赖 / 构建产物 ---
+node_modules/
+dist/
+dist-ssr/
+.vite/
+
+# --- 固件编译产物（webui/firmware 本地保留，不入仓）---
+webui/firmware/
+*.img
+*.fex
+vela.bin
+nuttx.bin
+nuttx.elf
+
+# --- 密钥/凭据 ---
+*.pem
+*.key
+credentials.json
+
+# --- 日志（AI Coding 日志需单独按规范提交，这里默认忽略后端运行日志）---
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# --- 系统/编辑器 ---
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
