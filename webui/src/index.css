@@ -1,0 +1,128 @@
+@import url("https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: "Noto Sans SC", system-ui, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: #1B1633;
+  color: #E8E6F0;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* 竖屏容器 — 320x480 板端原生尺寸 */
+.screen-portrait {
+  width: 100vw;
+  height: 100vh;
+  max-width: 320px;
+  max-height: 480px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 深夜星空气氛背景 */
+.aurora-bg {
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(167, 139, 250, 0.18) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 15%, rgba(142, 230, 224, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 100%, rgba(255, 183, 197, 0.10) 0%, transparent 60%),
+    linear-gradient(180deg, #1B1633 0%, #15112A 50%, #0F0C21 100%);
+}
+
+/* 星点装饰 */
+.stardots::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 78% 8%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(1.5px 1.5px at 35% 32%, rgba(142, 230, 224, 0.5), transparent),
+    radial-gradient(1px 1px at 88% 42%, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(1px 1px at 22% 68%, rgba(255, 183, 197, 0.4), transparent),
+    radial-gradient(1.2px 1.2px at 62% 78%, rgba(255, 255, 255, 0.5), transparent);
+  pointer-events: none;
+  animation: twinkle 4s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+/* 玻璃质感卡片 */
+.glass {
+  background: rgba(31, 28, 57, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(142, 230, 224, 0.18);
+}
+
+/* 文字渐变 */
+.text-gradient-moon {
+  background: linear-gradient(135deg, #8EE6E0 0%, #A78BFA 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* 滚动条隐藏（板端无滚动条美观） */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* 录音波纹 */
+.recording-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  border: 2px solid rgba(255, 107, 130, 0.6);
+  animation: ring-expand 1.6s ease-out infinite;
+}
+
+@keyframes ring-expand {
+  0% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+/* 打字光标 */
+.typing-cursor::after {
+  content: "▌";
+  color: #8EE6E0;
+  animation: blink 0.9s step-end infinite;
+  margin-left: 1px;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* 隐藏 webview 默认拖拽选择 */
+* {
+  -webkit-user-drag: none;
+}
