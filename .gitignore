@@ -18,11 +18,24 @@ webui/firmware/
 vela.bin
 nuttx.bin
 nuttx.elf
+*.elf
+*.o
+*.a
+*.d
+.built
+.depend
+Make.dep
+__pycache__/
+*.pyc
+firmware/*.zip
 
 # --- 密钥/凭据 ---
 *.pem
 *.key
 credentials.json
+
+# 本地 AI 原始会话可能包含凭据，只用于私有备份
+artifacts/private-ai-logs/
 
 # --- 日志（AI Coding 日志需单独按规范提交，这里默认忽略后端运行日志）---
 *.log

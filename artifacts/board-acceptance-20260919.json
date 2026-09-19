@@ -1,0 +1,8 @@
+{
+  "mode": "inspect",
+  "complete": false,
+  "physical_audio_verified": false,
+  "recognition_accuracy_verified": false,
+  "firmware": "NuttX  0.0.0 dd92bcf4257 Sep 19 2026 19:50:54 arm nsh",
+  "error": "Unexpected or unreadable firmware version"
+}

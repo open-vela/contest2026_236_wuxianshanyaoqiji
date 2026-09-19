@@ -1,0 +1,7 @@
+{
+  "app/gemini_chat_minimal/Kconfig": "a8b8a40b495f45fe6de631c24daabed43ae7dfcb791f0214ef57ab073257fce8",
+  "app/gemini_chat_minimal/Make.defs": "260751b253e73b388837cbc055121e369d081efa4d461a10e0832f6a1a1af450",
+  "app/gemini_chat_minimal/Makefile": "08681b354315c9419131342d08295cbb9a86f678f00bfa5ac7edb200eba786de",
+  "app/gemini_chat_minimal/gemini_chat_main.c": "bfa3d1e48e26fff99623b3bd8917a7843fb046aa50501fc3a3d561651311bf97",
+  "app/gemini_chat_minimal/qiji_config_main.c": "7f593bcbe64ab1414eaafde7e846512a200ed7e4592b4cba595b2882e62460cb"
+}
