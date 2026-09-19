@@ -1,0 +1,3 @@
+ifneq ($(CONFIG_GEMINI_CHAT_MINIMAL),)
+CONFIGURED_APPS += $(APPDIR)/packages/demos/gemini_chat_minimal
+endif

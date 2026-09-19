@@ -1,0 +1,27 @@
+diff --git a/src/agent_main.c b/src/agent_main.c
+index 9d676c2..a371619 100644
+--- a/src/agent_main.c
++++ b/src/agent_main.c
+@@ -700,6 +700,11 @@ int ai_agent_main(int argc, char* argv[])
+     syslog(LOG_INFO, "[%s] [boot +%ldms] AI Agent ready. Type 'help' in NSH for commands.\n",
+         TAG, boot_ms(&t0));
+ 
++#ifdef CONFIG_GEMINI_CHAT_MINIMAL
++    extern void qiji_chat_agent_ready(bool ready);
++    qiji_chat_agent_ready(true);
++#endif
++
+     /* Block main thread until shutdown is requested */
+     while (!g_shutdown_requested) {
+         sleep(1);
+@@ -707,6 +712,10 @@ int ai_agent_main(int argc, char* argv[])
+ 
+     syslog(LOG_INFO, "[%s] Shutdown requested — stopping services...\n", TAG);
+ 
++#ifdef CONFIG_GEMINI_CHAT_MINIMAL
++    qiji_chat_agent_ready(false);
++#endif
++
+     /* Wake all threads blocked on message bus before stopping services */
+     message_bus_wakeup();
+ 

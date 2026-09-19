@@ -1,0 +1,14 @@
+domain: CaptureGain
+	conf: gain-%AcapGain
+		ALL
+		FFmpegCommand = VolAcap,volume,%AcapGain%;
+
+domain: PlaybackVolume
+	conf: muted
+		ANY
+			MuteMode Is on
+			MusicVolume In 0
+		FFmpegCommand = VolApb,volume,0;
+	conf: level-%MusicVolume
+		MusicVolume In [1,10]
+		FFmpegCommand = VolApb,volume,10^(-4*(10-%MusicVolume%)/20);

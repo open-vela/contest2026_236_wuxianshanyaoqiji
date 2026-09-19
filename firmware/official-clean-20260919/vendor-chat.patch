@@ -1,0 +1,118 @@
+diff --git a/boards/r528/r528s3-gemini-s1/src/etc/init.d/rcS.nsh b/boards/r528/r528s3-gemini-s1/src/etc/init.d/rcS.nsh
+index fb3273d4..421309b3 100644
+--- a/boards/r528/r528s3-gemini-s1/src/etc/init.d/rcS.nsh
++++ b/boards/r528/r528s3-gemini-s1/src/etc/init.d/rcS.nsh
+@@ -99,4 +99,10 @@ bluetoothd &
+ #endif
+ 
+ echo "Boot nsh ok"
++
++#ifdef CONFIG_GEMINI_CHAT_MINIMAL
++qiji_chat &
++ai_agent &
++#endif
++
+ #endif /* CONFIG_GEMINI_S1_NSH */
+diff --git a/boards/r528/r528s3-gemini-s1/src/etc/media/criteria.txt b/boards/r528/r528s3-gemini-s1/src/etc/media/criteria.txt
+index 2f31b16c..d48ef827 100644
+--- a/boards/r528/r528s3-gemini-s1/src/etc/media/criteria.txt
++++ b/boards/r528/r528s3-gemini-s1/src/etc/media/criteria.txt
+@@ -1,18 +1,16 @@
+-ExclusiveCriterion Music                   : abufsrc@Music
+-ExclusiveCriterion Ring Info Health        : abufsrc@Ring
+-ExclusiveCriterion Media                   : abufsrc@Media
+-ExclusiveCriterion Alarm                   : abufsrc@Alarm
+-ExclusiveCriterion Enforced                : abufsrc@Enforced
+-ExclusiveCriterion TTS                     : abufsrc@TTS
+-ExclusiveCriterion Sport                   : abufsrc@Sport
+-ExclusiveCriterion Notify                  : abufsrc@Notify
+-ExclusiveCriterion Capture                 : abufsink@Capture
+-ExclusiveCriterion AudioMode        : normal ringtone phone = normal
+-ExclusiveCriterion MicMode          : off on = on
+-InclusiveCriterion UsingDevices     : mic = mic
+-InclusiveCriterion AvailableDevices : spk
+-ExclusiveCriterion persist.media.MuteMode    MuteMode : off on = off
+-NumericalCriterion persist.media.MediaVolume RecordVolume TTSVolume MusicVolume MediaVolume : [0,10] = 6
+-NumericalCriterion persist.media.RingVolume  RingVolume NotifyVolume HealthVolume InfoVolume  : [0,10] = 6
+-NumericalCriterion persist.media.AlarmVolume AlarmVolume : [0,10] = 6
+-NumericalCriterion persist.media.SportVolume SportVolume : [0,10] = 6
++InclusiveCriterion UsingDevices     : mic a2dpsnk = mic
++InclusiveCriterion ActiveStreams    : acap VOIPtx WWEtx MDStx
++ExclusiveCriterion Capture          : abufsink@acap
++ExclusiveCriterion Ring             : abufsrc@apb
++ExclusiveCriterion Music            : abufsrc@apb
++ExclusiveCriterion Alarm            : abufsrc@apb
++ExclusiveCriterion Video Video0     : movie_async@Video0
++ExclusiveCriterion VtunVideo Video1 : movie_async@Video1
++ExclusiveCriterion TalkCap          : amoviesink_async@acap
++ExclusiveCriterion VoipCap          : amoviesink_async@VOIPtx
++ExclusiveCriterion WWEtx            : amoviesink_async@WWEtx
++ExclusiveCriterion MDStx            : amoviesink_async@MDStx
++NumericalCriterion persist.media.AcapGain AcapGain : [1,10] = 10
++NumericalCriterion persist.media.AlarmVolume AlarmVolume : [0,20] = 10
++NumericalCriterion persist.media.A2dpsnkVolume A2dpsnkVolume RingVolume MusicVolume MediaVolume : [0,20] = 10
++ExclusiveCriterion VoiceChangeMode  : normal dashu xiaochou = normal
+diff --git a/boards/r528/r528s3-gemini-s1/src/etc/media/graph.conf b/boards/r528/r528s3-gemini-s1/src/etc/media/graph.conf
+index bebc39af..2476504f 100644
+--- a/boards/r528/r528s3-gemini-s1/src/etc/media/graph.conf
++++ b/boards/r528/r528s3-gemini-s1/src/etc/media/graph.conf
+@@ -1,21 +1,5 @@
+-abufsrc@Music=outputs=1:map=1[Music0],
++adevsrc@pcm0c=format=nuttx:sample_rate=48000:ch_layout=stereo:devname=/dev/audio/pcm0c:map=1,volume@VolAcap=precision=fixed[acap0],
++[acap0]abufsink@acap;
+ 
+-abufsrc@Ring=outputs=1:map=1[Ring0],
+-
+-abufsrc@Alarm=outputs=1:map=1[Alarm0],
+-
+-abufsrc@Notify=outputs=1:map=1[Notify0],
+-
+-abufsrc@TTS=outputs=1:map=1[TTS0],
+-
+-abufsrc@Sport=outputs=1:map=1[Sport0],
+-
+-abufsrc@Media=outputs=1:map=1[Media0],
+-
+-abufsrc@Enforced=outputs=1:map=1[Enforced0],
+-
+-[Music0][Ring0][Alarm0][Notify0][TTS0][Sport0][Media0][Enforced0]alsasink@pcm0p=inputs=8:devname=pcm0p,
+-
+-alsasrc@pcm0c=devname=pcm0c:outputs=1:map=1[cap0],
+-
+-[cap0]abufsink@Capture=inputs=1
++abufsrc@apb=map=1,volume@VolApb=precision=fixed[apb0],
++[apb0]adevsink@pcm0p=format=nuttx:sample_rate=48000:ch_layout=stereo:devname=/dev/audio/pcm0p
+diff --git a/chips/r528/drivers/rtos-hal/hal/source/dma/hal_dma.c b/chips/r528/drivers/rtos-hal/hal/source/dma/hal_dma.c
+index 312ea340..ade66510 100644
+--- a/chips/r528/drivers/rtos-hal/hal/source/dma/hal_dma.c
++++ b/chips/r528/drivers/rtos-hal/hal/source/dma/hal_dma.c
+@@ -1036,7 +1036,8 @@ hal_dma_status_t hal_dma_start(struct sunxi_dma_chan *chan)
+ 
+ hal_dma_status_t hal_dma_stop(struct sunxi_dma_chan *chan)
+ {
+-    unsigned long __cpsr;
++    unsigned long __cpsr, __ccpsr;
++    uint32_t high, irq_val;
+ 
+     if (NULL == chan)
+     {
+@@ -1052,6 +1053,19 @@ hal_dma_status_t hal_dma_stop(struct sunxi_dma_chan *chan)
+     hal_writel(CHAN_STOP, DMA_ENABLE(chan->chan_count));
+     hal_writel(CHAN_RESUME, DMA_PAUSE(chan->chan_count));
+ 
++    /* Disable and clear this channel's DMA IRQ before teardown so a
++     * hardware-latched completion interrupt cannot re-enter
++     * sunxi_dma_irq_handle() and dereference a desc/callback that
++     * sunxi_dma_free_ill() is about to free (start path re-enables it).
++     */
++    high = (chan->chan_count + START_CHAN_OFFSET >= HIGH_CHAN) ? 1 : 0;
++    __ccpsr = hal_spin_lock_irqsave(&dma_lock);
++    irq_val = hal_readl(DMA_IRQ_EN(high));
++    irq_val &= ~(SHIFT_IRQ_MASK(chan->irq_type, chan->chan_count));
++    hal_writel(irq_val, DMA_IRQ_EN(high));
++    hal_writel(SHIFT_IRQ_MASK(chan->irq_type, chan->chan_count), DMA_IRQ_STAT(high));
++    hal_spin_unlock_irqrestore(&dma_lock, __ccpsr);
++
+     if (chan->cyclic)
+     {
+         chan->cyclic = false;

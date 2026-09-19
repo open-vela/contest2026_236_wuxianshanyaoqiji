@@ -1,0 +1,7 @@
+InclusiveCriterion UsingDevices : mic = mic
+InclusiveCriterion ActiveStreams : acap
+ExclusiveCriterion Capture : abufsink@acap
+ExclusiveCriterion Music TTS Ring Alarm Media Notify : abufsrc@apb
+ExclusiveCriterion persist.media.MuteMode MuteMode : off on = off
+NumericalCriterion persist.media.AcapGain AcapGain : [1,10] = 1
+NumericalCriterion persist.media.QijiVolume MusicVolume TTSVolume RingVolume AlarmVolume MediaVolume : [0,10] = 6

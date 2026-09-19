@@ -1,0 +1,6 @@
+Date: 2026-09-19
+User report: qiji-chat.img display on; basic text conversation works; voice failed.
+ADB device: 1234
+uname -a: NuttX 0.0.0 dd92bcf4257 Sep 19 2026 02:05:25 arm nsh
+qiji_config status: AI Agent ready
+Read-only observations; no reflash or credential extraction.

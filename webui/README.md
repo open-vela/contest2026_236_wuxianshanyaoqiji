@@ -1,3 +1,5 @@
+> 网页为独立开发素材，不纳入本次固件。旧 WSL 构建脚本已移除，硬件成果见 ../docs/build-pack-guide.md。
+
 # WebUI — R528 Gemini-S1 板端 Live2D 二次元语音对话界面
 
 > 本目录是 2026 openvela AI 硬件开发者大赛参赛作品「无限闪耀队」的板端 Web 界面与 PC 网关代码。
@@ -77,10 +79,10 @@ webui/
 ├── scripts/                   # WSL 编译/打包辅助脚本
 │   ├── wsl-check.sh           # WSL 依赖检查
 │   ├── wsl-repo-init.sh       # repo 初始化 + 同步（USTC 镜像）
-│   ├── wsl-build.sh           # nsh_minidisplay 编译（含 GCC 13 兼容标志）
+│   # 固件构建入口已迁移到 ../docs/build-pack-guide.md
 │   ├── wsl-check-lfs.sh       # LFS 指针文件检测与修复
-│   ├── wsl-pack.sh            # dragonsecboot 编译 + PhoenixSuit 镜像打包
-│   └── wsl-copy-fw.sh         # 固件产物拷贝 + MD5 校验
+│   # 使用官方 envsetup / lunch_nuttx / pack
+│   # 旧固件拷贝脚本已移除，当前镜像按 SHA-256 核验
 ├── docs/                      # 项目文档
 │   ├── PRD.md                 # 产品需求文档
 │   ├── TechnicalArchitecture.md # 技术架构文档
@@ -238,8 +240,8 @@ $env:NODE_ENV="production"; $env:HOST="0.0.0.0"; node --import tsx api/server.ts
 
 板端固件编译、打包、烧入的完整流程见 [docs/BoardFlashingGuide.md](docs/BoardFlashingGuide.md)，此处仅列关键步骤：
 
-1. **WSL 编译固件**：使用 `scripts/wsl-build.sh` 编译 `nsh_minidisplay` 配置
-2. **打包 PhoenixSuit 镜像**：使用 `scripts/wsl-pack.sh` 调用 `pack_img.sh`
+1. **固件构建**：按 `../docs/build-pack-guide.md` 操作。
+2. **打包**：使用官方 `pack` 入口并核验镜像。
 3. **烧入三确认**：MD5 校验 → FEL 模式设置 → 工具版本检查
 4. **板端配置**：通过 NSH 串口配置 Wi-Fi，`webview http://<PC-IP>:3001/`
 

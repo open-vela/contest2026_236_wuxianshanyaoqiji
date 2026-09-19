@@ -1,0 +1,2 @@
+# Frozen release evidence must retain its original bytes on Windows too.
+firmware/** -text

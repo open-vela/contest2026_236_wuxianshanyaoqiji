@@ -1,3 +1,5 @@
+> 历史记录，不作为当前 Gemini-S1 固件构建入口。当前成果与复现流程见项目 docs/build-pack-guide.md；旧配置及脚本已停用。
+
 # 板端烧入与验证指南
 
 > **目标**：将二次元 Live2D 对话应用部署到润芯微 Gemini-S1（全志 R528）开发板，通过 OpenVela webview 加载，连接 PC 端 Node.js 网关实现豆包语音对话。

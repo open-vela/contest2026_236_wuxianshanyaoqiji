@@ -1,0 +1,28 @@
+{
+  "release": "gemini-s1-chat-20260919",
+  "hardware": "Gemini-S1 R528 + 2.8 inch ILI9341 SPI",
+  "primary_image": "qiji-chat.img",
+  "sha256": "777e4e7f97a2dd1221c58fc60a06af8d05f4a7362295e3c5f560881a8201e393",
+  "build_environment": {
+    "host": "WSL2 Ubuntu 24.04",
+    "compiler": "ARM GCC 13.4.0",
+    "officially_supported": false
+  },
+  "user_acceptance": {
+    "date": "2026-09-19",
+    "source": "user report",
+    "display": "passed",
+    "basic_text_chat": "passed",
+    "voice": "failed",
+    "long_term_stability": "not tested"
+  },
+  "agent_observation": {
+    "adb": "connected",
+    "uname": "NuttX 0.0.0 dd92bcf4257 Sep 19 2026 02:05:25 arm nsh",
+    "qiji_config_status": "AI Agent ready"
+  },
+  "notes": [
+    "Image verification JSON files record build-time checks, not later user acceptance.",
+    "No claim of voice acceptance or bit-for-bit reproducible rebuilding."
+  ]
+}
