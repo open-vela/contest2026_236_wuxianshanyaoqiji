@@ -1,2 +1,4 @@
 # Frozen release evidence must retain its original bytes on Windows too.
 firmware/** -text
+logs/**/*.jsonl -text
+logs/**/manifest.json -text
