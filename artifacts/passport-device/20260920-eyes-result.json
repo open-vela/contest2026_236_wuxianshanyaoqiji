@@ -1,0 +1,29 @@
+{
+  "version": "xiaocheng-0.2.1-refined-eyes",
+  "image_sha256": "9f5f9c4a02fcfb37c0bbfda5c5c9cdd4e9c125f19dc564a7feb78fbf8ed4851f",
+  "app_image_sha256": "db06a56fc250eb25b9b3e7d48815c48748b743b3f28bce6e6d58a030795ddf6b",
+  "app_elf_sha256": "3a32949c25208163a194043016b36cfa3aeb5ca13fa317af6a6ee4c7f8b63207",
+  "port": "COM3",
+  "app_offset": "0x10000",
+  "write_verified": true,
+  "startup_window_seconds": 30,
+  "expected_elf_in_log": true,
+  "crash_markers": false,
+  "coordinator_state": "waiting",
+  "peers": {
+    "qiji": false,
+    "xiaocheng": true
+  },
+  "wifi_config_preserved": true,
+  "port_released": true,
+  "physical_screen": "PASS: user confirmed display and blinking are normal",
+  "audio_and_two_device_conversation": "not tested",
+  "Build": "PASS",
+  "Host tests": "PASS: full gate, actual LVGL rendering and eye-frame checks",
+  "Device tests": "PASS: verified flash, matching startup ELF, 30-second observation, retained Wi-Fi, coordinator registration, user-confirmed display and blink",
+  "Unverified": [
+    "button scrolling",
+    "speech and two-device conversation",
+    "long-duration animation and network stress"
+  ]
+}

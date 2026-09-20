@@ -1,0 +1,288 @@
+diff --git a/boards/r528/r528s3-gemini-s1/configs/nsh_minidisplay/defconfig b/boards/r528/r528s3-gemini-s1/configs/nsh_minidisplay/defconfig
+index ab613d7a..860d695a 100644
+--- a/boards/r528/r528s3-gemini-s1/configs/nsh_minidisplay/defconfig
++++ b/boards/r528/r528s3-gemini-s1/configs/nsh_minidisplay/defconfig
+@@ -151,7 +151,6 @@ CONFIG_BLUETOOTH_BLE_ADV=y
+ CONFIG_BLUETOOTH_BLE_SCAN=y
+ CONFIG_BLUETOOTH_BLE_SUPPORT=y
+ CONFIG_BLUETOOTH_FRAMEWORK_SOCKET_IPC=y
+-CONFIG_BLUETOOTH_IPC_JOIN_LOOP=y
+ CONFIG_BLUETOOTH_LE_ADVERTISER_MAX_NUM=4
+ CONFIG_BLUETOOTH_SERVICE=y
+ CONFIG_BLUETOOTH_SLIP=y
+@@ -195,14 +194,12 @@ CONFIG_BT_H4=y
+ CONFIG_BT_HCI_TX_STACK_SIZE=4096
+ CONFIG_BT_HCI_TX_STACK_SIZE_WITH_PROMPT=y
+ CONFIG_BT_L2CAP_TX_MTU=498
+-CONFIG_BT_LIGHTCTRL_STACKSIZE=28672
+ CONFIG_BT_MAX_CONN=5
+ CONFIG_BT_MAX_PAIRED=10
+ CONFIG_BT_POWER_MODE_CONTROL=y
+ CONFIG_BT_PRIVACY=y
+ CONFIG_BT_RX_STACK_SIZE=4096
+ CONFIG_BT_SAMPLE=y
+-CONFIG_BT_START_STACKSIZE=28672
+ CONFIG_BUILTIN=y
+ CONFIG_COMPONENTS_AW_ALSA_UTILS=y
+ CONFIG_COMPONENTS_AW_ALSA_UTILS_ALOOP=y
+@@ -294,7 +291,6 @@ CONFIG_GRAPHICS_LVGL=y
+ CONFIG_GT911_IIC_TOUCH=y
+ CONFIG_HAL_TEST_DISP=y
+ CONFIG_HAL_TEST_GPADC=y
+-CONFIG_HAVE_CXX=y
+ CONFIG_I2C=y
+ CONFIG_IDLETHREAD_STACKSIZE=20480
+ CONFIG_IEEE80211_REALTEK_WIFI=y
+@@ -473,13 +469,9 @@ CONFIG_NXPLAYER_MAINTHREAD_STACKSIZE=3072
+ CONFIG_NXRECORDER_MAINTHREAD_STACKSIZE=3072
+ CONFIG_PROTOBUF_C=y
+ CONFIG_PTHREAD_MUTEX_BOTH=y
+-CONFIG_PTHREAD_MUTEX_DEFAULT_NORMAL=y
+ CONFIG_PTHREAD_MUTEX_DEFAULT_ROBUST=y
+-CONFIG_PTHREAD_STACK_DEFAULT=16384
+ CONFIG_PWM=y
+ CONFIG_QUICKAPP=y
+-CONFIG_QUICKAPP_PRIORITY=100
+-CONFIG_QUICKAPP_STACKSIZE=131072
+ CONFIG_QUICKAPP_VAPP=y
+ CONFIG_R528_AUDIO=y
+ CONFIG_R528_DDR_MAPSIZE=8388608
+@@ -503,7 +495,6 @@ CONFIG_SCHED_BACKTRACE=y
+ CONFIG_SCHED_CHILD_STATUS=y
+ CONFIG_SCHED_HAVE_PARENT=y
+ CONFIG_SCHED_HPWORKPRIORITY=254
+-CONFIG_SCHED_HPWORKSTACKSIZE=16384
+ CONFIG_SCHED_INSTRUMENTATION_WDOG=y
+ CONFIG_SCHED_LPWORKSTACKSIZE=4096
+ CONFIG_SDIO_BLOCKSETUP=y
+diff --git a/boards/r528/r528s3-gemini-s1/src/etc/init.d/rcS.nsh b/boards/r528/r528s3-gemini-s1/src/etc/init.d/rcS.nsh
+index fb3273d4..8cd3bed2 100644
+--- a/boards/r528/r528s3-gemini-s1/src/etc/init.d/rcS.nsh
++++ b/boards/r528/r528s3-gemini-s1/src/etc/init.d/rcS.nsh
+@@ -79,13 +79,17 @@ fi
+ #endif
+ #endif
+ 
+-#ifdef CONFIG_SYSTEM_NTPC
++#if defined(CONFIG_SYSTEM_NTPC) && !defined(CONFIG_GEMINI_CHAT_MINIMAL)
+ ntpcstart &
+ #endif
+ 
+ if [ -f /data/etc/wifi/wapi.conf ]
+ then
++#ifdef CONFIG_GEMINI_CHAT_MINIMAL
++  qiji_config wifi_reconnect &
++#else
+   sh /etc/wifi/start_wifi.sh &
++#endif
+ fi
+ 
+ #ifdef CONFIG_LUNCHER_MINI_APP
+@@ -99,4 +103,10 @@ bluetoothd &
+ #endif
+ 
+ echo "Boot nsh ok"
++
++#ifdef CONFIG_GEMINI_CHAT_MINIMAL
++qiji_chat &
++ai_agent &
++#endif
++
+ #endif /* CONFIG_GEMINI_S1_NSH */
+diff --git a/boards/r528/r528s3-gemini-s1/src/etc/media/criteria.txt b/boards/r528/r528s3-gemini-s1/src/etc/media/criteria.txt
+index 2f31b16c..864872b1 100644
+--- a/boards/r528/r528s3-gemini-s1/src/etc/media/criteria.txt
++++ b/boards/r528/r528s3-gemini-s1/src/etc/media/criteria.txt
+@@ -1,18 +1,7 @@
+-ExclusiveCriterion Music                   : abufsrc@Music
+-ExclusiveCriterion Ring Info Health        : abufsrc@Ring
+-ExclusiveCriterion Media                   : abufsrc@Media
+-ExclusiveCriterion Alarm                   : abufsrc@Alarm
+-ExclusiveCriterion Enforced                : abufsrc@Enforced
+-ExclusiveCriterion TTS                     : abufsrc@TTS
+-ExclusiveCriterion Sport                   : abufsrc@Sport
+-ExclusiveCriterion Notify                  : abufsrc@Notify
+-ExclusiveCriterion Capture                 : abufsink@Capture
+-ExclusiveCriterion AudioMode        : normal ringtone phone = normal
+-ExclusiveCriterion MicMode          : off on = on
+-InclusiveCriterion UsingDevices     : mic = mic
+-InclusiveCriterion AvailableDevices : spk
+-ExclusiveCriterion persist.media.MuteMode    MuteMode : off on = off
+-NumericalCriterion persist.media.MediaVolume RecordVolume TTSVolume MusicVolume MediaVolume : [0,10] = 6
+-NumericalCriterion persist.media.RingVolume  RingVolume NotifyVolume HealthVolume InfoVolume  : [0,10] = 6
+-NumericalCriterion persist.media.AlarmVolume AlarmVolume : [0,10] = 6
+-NumericalCriterion persist.media.SportVolume SportVolume : [0,10] = 6
++InclusiveCriterion UsingDevices : mic = mic
++InclusiveCriterion ActiveStreams : acap
++ExclusiveCriterion Capture : abufsink@acap
++ExclusiveCriterion Music TTS Ring Alarm Media Notify : abufsrc@apb
++ExclusiveCriterion persist.media.MuteMode MuteMode : off on = off
++NumericalCriterion persist.media.AcapGain AcapGain : [1,10] = 1
++NumericalCriterion persist.media.QijiVolume MusicVolume TTSVolume RingVolume AlarmVolume MediaVolume : [0,10] = 6
+diff --git a/boards/r528/r528s3-gemini-s1/src/etc/media/graph.conf b/boards/r528/r528s3-gemini-s1/src/etc/media/graph.conf
+index bebc39af..2476504f 100644
+--- a/boards/r528/r528s3-gemini-s1/src/etc/media/graph.conf
++++ b/boards/r528/r528s3-gemini-s1/src/etc/media/graph.conf
+@@ -1,21 +1,5 @@
+-abufsrc@Music=outputs=1:map=1[Music0],
++adevsrc@pcm0c=format=nuttx:sample_rate=48000:ch_layout=stereo:devname=/dev/audio/pcm0c:map=1,volume@VolAcap=precision=fixed[acap0],
++[acap0]abufsink@acap;
+ 
+-abufsrc@Ring=outputs=1:map=1[Ring0],
+-
+-abufsrc@Alarm=outputs=1:map=1[Alarm0],
+-
+-abufsrc@Notify=outputs=1:map=1[Notify0],
+-
+-abufsrc@TTS=outputs=1:map=1[TTS0],
+-
+-abufsrc@Sport=outputs=1:map=1[Sport0],
+-
+-abufsrc@Media=outputs=1:map=1[Media0],
+-
+-abufsrc@Enforced=outputs=1:map=1[Enforced0],
+-
+-[Music0][Ring0][Alarm0][Notify0][TTS0][Sport0][Media0][Enforced0]alsasink@pcm0p=inputs=8:devname=pcm0p,
+-
+-alsasrc@pcm0c=devname=pcm0c:outputs=1:map=1[cap0],
+-
+-[cap0]abufsink@Capture=inputs=1
++abufsrc@apb=map=1,volume@VolApb=precision=fixed[apb0],
++[apb0]adevsink@pcm0p=format=nuttx:sample_rate=48000:ch_layout=stereo:devname=/dev/audio/pcm0p
+diff --git a/boards/r528/r528s3-gemini-s1/src/etc/media/settings.pfw b/boards/r528/r528s3-gemini-s1/src/etc/media/settings.pfw
+index 2812f8f6..b1a71fe9 100644
+--- a/boards/r528/r528s3-gemini-s1/src/etc/media/settings.pfw
++++ b/boards/r528/r528s3-gemini-s1/src/etc/media/settings.pfw
+@@ -1,88 +1,14 @@
+-domain: MicDomain
+-	conf: enable
+-		UsingDevices Includes mic
+-		FFmpegCommand = pcm0c,unmute,;
+-	conf: disable
++domain: CaptureGain
++	conf: gain-%AcapGain
+ 		ALL
+-		FFmpegCommand = pcm0c,mute,;
++		FFmpegCommand = VolAcap,volume,%AcapGain%;
+ 
+-domain: MusicVolumeDomain
+-	conf: mute
++domain: PlaybackVolume
++	conf: muted
+ 		ANY
+-			MuteMode   Is on
++			MuteMode Is on
+ 			MusicVolume In 0
+-		FFmpegCommand = Music,volume,0;
+-	conf: index-%MusicVolume
+-		MusicVolume In [1,9]
+-		FFmpegCommand = Music,volume,10^(-4*(10-%MusicVolume%)/20);
+-	conf: 10
+-		MusicVolume In 10
+-		FFmpegCommand = Music,volume,1;
+-
+-domain: MediaVolumeDomain
+-	conf: mute
+-		MediaVolume In 0
+-		FFmpegCommand = Media,volume,0;
+-	conf: index-%MediaVolume
+-		MediaVolume In [1,9]
+-		FFmpegCommand = Media,volume,10^(-4*(10-%MediaVolume%)/20);
+-	conf: 10
+-		MediaVolume In 10
+-		FFmpegCommand = Media,volume,1;
+-
+-domain: RingVolumeDomain
+-	conf: mute
+-		ANY
+-			MuteMode   Is on
+-			RingVolume In 0
+-		FFmpegCommand = Ring,volume,0;
+-	conf: index-%RingVolume
+-		RingVolume In [1,9]
+-		FFmpegCommand = Ring,volume,10^(-4*(10-%RingVolume%)/20);
+-	conf: 10
+-		RingVolume In 10
+-		FFmpegCommand = Ring,volume,1;
+-
+-domain: AlarmVolumeDomain
+-	conf: mute
+-		AlarmVolume In 0
+-		FFmpegCommand = Alarm,volume,0;
+-	conf: index-%AlarmVolume
+-		AlarmVolume In [1,9]
+-		FFmpegCommand = Alarm,volume,10^(-4*(10-%AlarmVolume%)/20);
+-	conf: 10
+-		AlarmVolume In 10
+-		FFmpegCommand = Alarm,volume,1;
+-
+-domain: NotifyVolumeDomain
+-	conf: mute
+-		NotifyVolume In 0
+-		FFmpegCommand = Notify,volume,0;
+-	conf: index-%NotifyVolume
+-		NotifyVolume In [1,9]
+-		FFmpegCommand = Notify,volume,10^(-4*(10-%NotifyVolume%)/20);
+-	conf: 10
+-		NotifyVolume In 10
+-		FFmpegCommand = Notify,volume,1;
+-
+-domain: TTSVolumeDomain
+-	conf: mute
+-		TTSVolume In 0
+-		FFmpegCommand = TTS,volume,0;
+-	conf: index-%TTSVolume
+-		TTSVolume In [1,9]
+-		FFmpegCommand = TTS,volume,10^(-4*(10-%TTSVolume%)/20);
+-	conf: 10
+-		TTSVolume In 10
+-		FFmpegCommand = TTS,volume,1;
+-
+-domain: SportVolumeDomain
+-	conf: mute
+-		SportVolume In 0
+-		FFmpegCommand = Sport,volume,0;
+-	conf: index-%SportVolume
+-		SportVolume In [1,9]
+-		FFmpegCommand = Sport,volume,10^(-4*(10-%SportVolume%)/20);
+-	conf: 10
+-		SportVolume In 10
+-		FFmpegCommand = Sport,volume,1;
++		FFmpegCommand = VolApb,volume,0;
++	conf: level-%MusicVolume
++		MusicVolume In [1,10]
++		FFmpegCommand = VolApb,volume,10^(-4*(10-%MusicVolume%)/20);
+diff --git a/chips/r528/drivers/rtos-hal/hal/source/dma/hal_dma.c b/chips/r528/drivers/rtos-hal/hal/source/dma/hal_dma.c
+index 312ea340..ade66510 100644
+--- a/chips/r528/drivers/rtos-hal/hal/source/dma/hal_dma.c
++++ b/chips/r528/drivers/rtos-hal/hal/source/dma/hal_dma.c
+@@ -1036,7 +1036,8 @@ hal_dma_status_t hal_dma_start(struct sunxi_dma_chan *chan)
+ 
+ hal_dma_status_t hal_dma_stop(struct sunxi_dma_chan *chan)
+ {
+-    unsigned long __cpsr;
++    unsigned long __cpsr, __ccpsr;
++    uint32_t high, irq_val;
+ 
+     if (NULL == chan)
+     {
+@@ -1052,6 +1053,19 @@ hal_dma_status_t hal_dma_stop(struct sunxi_dma_chan *chan)
+     hal_writel(CHAN_STOP, DMA_ENABLE(chan->chan_count));
+     hal_writel(CHAN_RESUME, DMA_PAUSE(chan->chan_count));
+ 
++    /* Disable and clear this channel's DMA IRQ before teardown so a
++     * hardware-latched completion interrupt cannot re-enter
++     * sunxi_dma_irq_handle() and dereference a desc/callback that
++     * sunxi_dma_free_ill() is about to free (start path re-enables it).
++     */
++    high = (chan->chan_count + START_CHAN_OFFSET >= HIGH_CHAN) ? 1 : 0;
++    __ccpsr = hal_spin_lock_irqsave(&dma_lock);
++    irq_val = hal_readl(DMA_IRQ_EN(high));
++    irq_val &= ~(SHIFT_IRQ_MASK(chan->irq_type, chan->chan_count));
++    hal_writel(irq_val, DMA_IRQ_EN(high));
++    hal_writel(SHIFT_IRQ_MASK(chan->irq_type, chan->chan_count), DMA_IRQ_STAT(high));
++    hal_spin_unlock_irqrestore(&dma_lock, __ccpsr);
++
+     if (chan->cyclic)
+     {
+         chan->cyclic = false;

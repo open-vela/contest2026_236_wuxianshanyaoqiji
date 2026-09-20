@@ -1,0 +1,23 @@
+{
+  "image": "qiji-chat-kotone.img",
+  "sha256": "307a098dfd2ad7a0212b54a79403c80ad9e186d4e63705882c7a632239f5c11d",
+  "bytes": 28800000,
+  "implementation": "12 live layers + 4 eye/mouth alternatives + original 8 sprites",
+  "layer_format": "LVGL 9 ARGB8888 (BGRA bytes), cropped per layer",
+  "layer_bytes": 172732,
+  "mouth": "Real accepted PCM amplitude with estimated playback position; not phoneme alignment",
+  "build_verified": true,
+  "host_tests_passed": 7,
+  "packed_assets_verified": 24,
+  "hardware_verified": false,
+  "credentials_embedded": false,
+  "image_api_model": "gpt-image-2",
+  "image_api_provider": "https://sapi.riyuexy.cc/v1",
+  "version": "0.4.0",
+  "assistant_name": "\u85e4\u7530\u7434\u97f3",
+  "session": "qiji_kotone_v1",
+  "persona_bytes": 3974,
+  "persona_sha256": "fb8a8ef50401ec0e19818b38afe5f51d11fe3c8c2b590ed9c4e174d0182abb88",
+  "persona_host_probes": 12,
+  "existing_soul_requires_deployment": true
+}

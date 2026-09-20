@@ -1,0 +1,20 @@
+{
+  "version": "xiaocheng-0.1-overlay",
+  "image": "passport-xiaocheng-overlay-full.bin",
+  "sha256": "9fb4b005ff9a3cfab5469fd7c1d633f8f9315413f8dba340b9b6f0057400dbca",
+  "bytes": 3141584,
+  "app_elf_sha256": "5cb463a9330661e61f1f112eec4051eec533a39534527212647f3974d674d206",
+  "passport_upstream": "855d2106547988e33128e27aadff4fe98351fe14",
+  "layout": "1.875x character, one 12px header row, translucent dialogue above character, no footer hint",
+  "Build": "PASS",
+  "Host tests": "PASS (upstream gate and actual LVGL rendering)",
+  "Device tests": "NOT RUN",
+  "Unverified": [
+    "physical display",
+    "on-device heap and animation",
+    "button scrolling"
+  ],
+  "flash_offset": "0x0",
+  "merged_flash_may_reset_nvs": true,
+  "matching_debug_manifest": "debug/manifest.json"
+}

@@ -1,0 +1,12 @@
+{
+  "image": "qiji-chat-avatar.img",
+  "sha256": "00292de7b2156516389bb8e4b7423cf62d4a56084ff25e722ad76ef07ba63096",
+  "bytes": 27411456,
+  "hardware_verified": false,
+  "host_render_verified": true,
+  "animation_frames_verified": 50,
+  "character": "Original procedural Seedlight; LVGL shapes; no third-party character model",
+  "voice_lipsync": false,
+  "build_environment": "WSL2 Ubuntu 24.04 (outside official supported environment)",
+  "credentials_embedded": false
+}

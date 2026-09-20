@@ -33,7 +33,7 @@ for line in source.read_text(encoding='utf-8').splitlines():
     else:doc.add_paragraph(line)
 footer=section.footer.paragraphs[0]
 footer.alignment=2
-footer.add_run('绮迹 · 参赛介绍草稿 | ')
+footer.add_run('绮迹 · 双硬件伙伴介绍 | ')
 field=OxmlElement('w:fldSimple');field.set(qn('w:instr'),'PAGE');footer._p.append(field)
 destination.parent.mkdir(parents=True,exist_ok=True)
 doc.save(destination)

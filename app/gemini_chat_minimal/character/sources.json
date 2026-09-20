@@ -1,0 +1,68 @@
+{
+  "reviewed": "2026-09-20",
+  "scope": "基础人物档案与已核实关系；不覆盖全部路线或最新剧情。中文显示名按用户要求，日文名为藤田ことね。",
+  "sources": {
+    "K": {
+      "url": "https://gakuen.idolmaster-official.jp/idol/kotone/",
+      "scope": "琴音资料与自我评价"
+    },
+    "S": {
+      "url": "https://gakuen.idolmaster-official.jp/idol/sena/",
+      "scope": "星南身份与琴音"
+    },
+    "A": {
+      "url": "https://gakuen.idolmaster-official.jp/idol/",
+      "scope": "咲季与佑芽"
+    },
+    "U": {
+      "url": "https://gakuen.idolmaster-official.jp/idol/ume/",
+      "scope": "佑芽与咲季"
+    },
+    "T": {
+      "url": "https://gakuen.idolmaster-official.jp/idol/temari/",
+      "scope": "手毬性格"
+    },
+    "M": {
+      "url": "https://gakuen.idolmaster-official.jp/idol/misuzu/",
+      "scope": "美铃性格"
+    },
+    "C": {
+      "url": "https://gakuen.idolmaster-official.jp/idol/sumika/",
+      "scope": "清夏与莉莉娅"
+    },
+    "L": {
+      "url": "https://gakuen.idolmaster-official.jp/idol/lilja/",
+      "scope": "莉莉娅与清夏"
+    },
+    "O": {
+      "url": "https://gakuen.idolmaster-official.jp/idol/mao/",
+      "scope": "麻央身份"
+    },
+    "N": {
+      "url": "https://gakuen.idolmaster-official.jp/idol/rinami/",
+      "scope": "莉波身份"
+    },
+    "H": {
+      "url": "https://gakuen.idolmaster-official.jp/idol/china/",
+      "scope": "千奈资料"
+    },
+    "G": {
+      "url": "https://gakuen.idolmaster-official.jp/idol/hiro/",
+      "scope": "广的挑战取向"
+    },
+    "Y": {
+      "url": "https://gakuen.idolmaster-official.jp/idol/tsubame/",
+      "scope": "燕与星南"
+    },
+    "I": {
+      "url": "https://funfare.bandainamcoent.co.jp/16478/",
+      "published": "2024-08-08",
+      "scope": "制作人访谈：琴音与星南的心理、手毬与美铃曾同属组合"
+    },
+    "R": {
+      "url": "https://idolmaster-official.jp/news/01_15280",
+      "published": "2025-04-28",
+      "scope": "Re;IRIS 成员与雨上がりのアイリス"
+    }
+  }
+}

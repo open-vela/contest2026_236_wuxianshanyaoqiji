@@ -1,0 +1,475 @@
+diff --git a/src/agent_main.c b/src/agent_main.c
+index 9d676c2..a371619 100644
+--- a/src/agent_main.c
++++ b/src/agent_main.c
+@@ -700,6 +700,11 @@ int ai_agent_main(int argc, char* argv[])
+     syslog(LOG_INFO, "[%s] [boot +%ldms] AI Agent ready. Type 'help' in NSH for commands.\n",
+         TAG, boot_ms(&t0));
+ 
++#ifdef CONFIG_GEMINI_CHAT_MINIMAL
++    extern void qiji_chat_agent_ready(bool ready);
++    qiji_chat_agent_ready(true);
++#endif
++
+     /* Block main thread until shutdown is requested */
+     while (!g_shutdown_requested) {
+         sleep(1);
+@@ -707,6 +712,10 @@ int ai_agent_main(int argc, char* argv[])
+ 
+     syslog(LOG_INFO, "[%s] Shutdown requested — stopping services...\n", TAG);
+ 
++#ifdef CONFIG_GEMINI_CHAT_MINIMAL
++    qiji_chat_agent_ready(false);
++#endif
++
+     /* Wake all threads blocked on message bus before stopping services */
+     message_bus_wakeup();
+ 
+diff --git a/src/core/agent_loop.c b/src/core/agent_loop.c
+index 3d9dec3..eed46e6 100644
+--- a/src/core/agent_loop.c
++++ b/src/core/agent_loop.c
+@@ -65,6 +65,16 @@ static bool llm_call_timed_out(uint32_t latency_ms);
+ #define LLM_TIMEOUT_TASK_COMPLETE_MSG \
+     "任务已完成，但生成确认消息超时。"
+ 
++/* TLS/NTP may change CLOCK_REALTIME during the first request. */
++static void qiji_monotonic_timeval(struct timeval *value, void *unused)
++{
++    (void)unused;
++    struct timespec now = {0};
++    clock_gettime(CLOCK_MONOTONIC, &now);
++    value->tv_sec = now.tv_sec;
++    value->tv_usec = now.tv_nsec / 1000;
++}
++
+ /* ── Clock-safe elapsed time calculation ───────────────────── */
+ 
+ static inline uint32_t calc_elapsed_ms(const struct timeval* t0,
+@@ -820,9 +830,9 @@ static char* force_finish_reply(const char* system_prompt,
+     llm_response_t resp;
+     char* result = NULL;
+     struct timeval t0, t1;
+-    gettimeofday(&t0, NULL);
++    qiji_monotonic_timeval(&t0, NULL);
+     int err = llm_chat_tools(system_prompt, messages, NULL, &resp);
+-    gettimeofday(&t1, NULL);
++    qiji_monotonic_timeval(&t1, NULL);
+     uint32_t ms = calc_elapsed_ms(&t0, &t1);
+     bool timed_out = llm_call_timed_out(ms);
+ 
+@@ -990,9 +1000,9 @@ static char* handle_task_complete(const char* sys_prompt, cJSON* messages,
+     llm_response_t final_resp;
+     char* result = NULL;
+     struct timeval t0, t1;
+-    gettimeofday(&t0, NULL);
++    qiji_monotonic_timeval(&t0, NULL);
+     int err = llm_chat_tools(sys_prompt, messages, NULL, &final_resp);
+-    gettimeofday(&t1, NULL);
++    qiji_monotonic_timeval(&t1, NULL);
+     uint32_t ms = calc_elapsed_ms(&t0, &t1);
+     bool timed_out = llm_call_timed_out(ms);
+ 
+@@ -1065,9 +1075,9 @@ static char* run_react_loop(const char* sys_prompt, cJSON* messages,
+ 
+         llm_response_t resp;
+         struct timeval tv_start, tv_end;
+-        gettimeofday(&tv_start, NULL);
++        qiji_monotonic_timeval(&tv_start, NULL);
+         int err = llm_chat_tools(sys_prompt, messages, tools_json, &resp);
+-        gettimeofday(&tv_end, NULL);
++        qiji_monotonic_timeval(&tv_end, NULL);
+         uint32_t latency_ms = calc_elapsed_ms(&tv_start, &tv_end);
+ 
+         /* Router failover: on LLM call failure, try next backend */
+@@ -1083,10 +1093,10 @@ static char* run_react_loop(const char* sys_prompt, cJSON* messages,
+                 router_idx = next_idx;
+                 trace.backend_idx = next_idx;
+                 llm_response_free(&resp);
+-                gettimeofday(&tv_start, NULL);
++                qiji_monotonic_timeval(&tv_start, NULL);
+                 err = llm_chat_tools(sys_prompt, messages,
+                     tools_json, &resp);
+-                gettimeofday(&tv_end, NULL);
++                qiji_monotonic_timeval(&tv_end, NULL);
+                 latency_ms = calc_elapsed_ms(&tv_start, &tv_end);
+             }
+         }
+@@ -1183,10 +1193,10 @@ static char* run_react_loop(const char* sys_prompt, cJSON* messages,
+                     router_idx = prem_idx;
+                     trace.backend_idx = prem_idx;
+ 
+-                    gettimeofday(&tv_start, NULL);
++                    qiji_monotonic_timeval(&tv_start, NULL);
+                     err = llm_chat_tools(sys_prompt, messages,
+                         tools_json, &resp);
+-                    gettimeofday(&tv_end, NULL);
++                    qiji_monotonic_timeval(&tv_end, NULL);
+                     latency_ms = calc_elapsed_ms(&tv_start, &tv_end);
+ 
+                     /* Watchdog check on cascade retry */
+diff --git a/src/voice/audio_playback.c b/src/voice/audio_playback.c
+index 6a2089c..15aea9e 100644
+--- a/src/voice/audio_playback.c
++++ b/src/voice/audio_playback.c
+@@ -26,6 +26,9 @@
+ #include <string.h>
+ #include <syslog.h>
+ #include <unistd.h>
++#include <stdatomic.h>
++#include <time.h>
++#include <stdint.h>
+ 
+ static const char* TAG = "audio_pb";
+ 
+@@ -37,19 +40,44 @@ struct audio_playback {
+     void* player;
+     size_t total_written;
+     int bytes_per_frame;
+-    volatile int stopped;
++    atomic_int stopped;
++    atomic_int completed;
++    atomic_int error;
++    unsigned int sample_rate;
++    unsigned int upsample;
++    int previous_valid;
++    int16_t previous;
+ };
+ 
++static void qiji_playback_event(void *cookie, int event, int result, const char *extra)
++{
++    (void)extra;
++    audio_playback_t *pb = cookie;
++    if (result < 0) atomic_store(&pb->error, result);
++    if (event == MEDIA_EVENT_COMPLETED) atomic_store(&pb->completed, 1);
++}
++
+ audio_playback_t* audio_playback_open(const char* dev_path,
+     unsigned int sample_rate, unsigned int channels,
+     unsigned int bits_per_sample)
+ {
+     (void)dev_path;
++    /* The official minimal hardware graph is fixed at 48 kHz stereo.
++     * Its volume filter cannot change rate/channel count. Convert before
++     * sending PCM so every link agrees; preserve state across cloud chunks. */
++    if ((sample_rate != 24000 && sample_rate != 16000) ||
++        channels != 1 || bits_per_sample != 16) return NULL;
++    unsigned int upsample = 48000 / sample_rate;
++    sample_rate = 48000;
++    channels = 2;
+ 
+     if (s_active_player) {
+         syslog(LOG_WARNING, "[%s] force closing stale player\n", TAG);
+         media_player_stop(s_active_player);
+-        media_player_close(s_active_player, 0);
++        if (media_player_close(s_active_player, 0) < 0) {
++            syslog(LOG_ERR, "[%s] quarantined player requires media restart\n", TAG);
++            return NULL;
++        }
+         s_active_player = NULL;
+         usleep(100000);
+     }
+@@ -86,6 +114,16 @@ audio_playback_t* audio_playback_open(const char* dev_path,
+         return NULL;
+     }
+ 
++    atomic_init(&pb->stopped, 0);
++    atomic_init(&pb->completed, 0);
++    atomic_init(&pb->error, 0);
++    pb->sample_rate = sample_rate;
++    pb->upsample = upsample;
++    if (media_player_set_event_callback(player, pb, qiji_playback_event) < 0) {
++        media_player_close(player, 0);
++        free(pb);
++        return NULL;
++    }
+     pb->player = player;
+     pb->bytes_per_frame = (bits_per_sample / 8) * channels;
+     s_active_player = player;
+@@ -95,31 +133,70 @@ audio_playback_t* audio_playback_open(const char* dev_path,
+     return pb;
+ }
+ 
+-int audio_playback_write(audio_playback_t* pb, const void* buf, size_t len)
++static long long qiji_playback_ms(void)
+ {
+-    if (!pb || !pb->player || !buf || len == 0) {
+-        return -EINVAL;
+-    }
++    struct timespec now;
++    clock_gettime(CLOCK_MONOTONIC, &now);
++    return (long long)now.tv_sec * 1000 + now.tv_nsec / 1000000;
++}
+ 
+-    if (pb->stopped) {
+-        return -ECANCELED;
++static int qiji_write_pcm(audio_playback_t *pb, const void *buf, size_t len)
++{
++    size_t done = 0;
++    long long deadline = qiji_playback_ms() + 5000;
++    while (done < len) {
++        if (atomic_load(&pb->stopped)) return -ECANCELED;
++        if (atomic_load(&pb->error)) return atomic_load(&pb->error);
++        if (qiji_playback_ms() >= deadline) return -ETIMEDOUT;
++        ssize_t n = media_player_write_data(pb->player,
++            (const unsigned char *)buf + done, len - done);
++        if (n == -EAGAIN || n == -EWOULDBLOCK || n == -EINTR) {
++            usleep(1000);
++            continue;
++        }
++        if (n <= 0) return n < 0 ? (int)n : -EIO;
++        done += n;
++        pb->total_written += n;
+     }
++    return 0;
++}
+ 
+-    ssize_t n = media_player_write_data(pb->player, buf, len);
+-    if (n > 0) {
+-        pb->total_written += (size_t)n;
++int audio_playback_write(audio_playback_t *pb, const void *buf, size_t len)
++{
++    if (!pb || !pb->player || !buf || !len || len % 2) return -EINVAL;
++    const unsigned char *src = buf;
++    int16_t output[768];
++    size_t offset = 0;
++    while (offset < len) {
++        size_t count = 0;
++        while (offset < len && count + pb->upsample * 2 <= 768) {
++            int16_t sample;
++            memcpy(&sample, src + offset, sizeof(sample));
++            offset += 2;
++            if (!pb->previous_valid) {
++                pb->previous = sample;
++                pb->previous_valid = 1;
++            }
++            for (unsigned int j = 1; j <= pb->upsample; j++) {
++                int32_t value = pb->previous +
++                    ((int32_t)sample - pb->previous) * (int32_t)j / (int32_t)pb->upsample;
++                output[count++] = (int16_t)value;
++                output[count++] = (int16_t)value;
++            }
++            pb->previous = sample;
++        }
++        int ret = qiji_write_pcm(pb, output, count * sizeof(*output));
++        if (ret) { atomic_store(&pb->error, ret); return ret; }
+     }
+-
+-    return (int)n;
++    return (int)len;
+ }
+ 
+ void audio_playback_stop(audio_playback_t* pb)
+ {
+     if (pb) {
+-        pb->stopped = 1;
+-        if (pb->player) {
+-            media_player_stop(pb->player);
+-        }
++        /* Called while holding the voice state lock: never perform IPC here.
++         * The writer observes this flag after its bounded socket operation. */
++        atomic_store(&pb->stopped, 1);
+     }
+ }
+ 
+@@ -134,9 +211,32 @@ void audio_playback_close(audio_playback_t* pb)
+             TAG, pb->total_written);
+         media_player_stop(pb->player);
+         usleep(50 * 1000);
+-        media_player_close(pb->player, 0);
++        if (media_player_close(pb->player, 0) < 0) {
++            /* Callback may still reference pb; preserve its lifetime. */
++            syslog(LOG_ERR, "[%s] player close failed; cookie retained\n", TAG);
++            return;
++        }
+         s_active_player = NULL;
+     }
+ 
+     free(pb);
+ }
++
++/* EOF flushes decoder output; wait for audible completion, not network EOF. */
++int qiji_audio_playback_finish(audio_playback_t *pb)
++{
++    if (!pb || !pb->player) return -EINVAL;
++    media_player_close_socket(pb->player);
++    struct timespec start, now;
++    clock_gettime(CLOCK_MONOTONIC, &start);
++    unsigned long limit = pb->total_written / (pb->sample_rate * pb->bytes_per_frame) + 10;
++    if (limit > 130) limit = 130;
++    for (;;) {
++        if (atomic_load(&pb->error)) return atomic_load(&pb->error);
++        if (atomic_load(&pb->stopped)) return -ECANCELED;
++        if (atomic_load(&pb->completed)) return 0;
++        clock_gettime(CLOCK_MONOTONIC, &now);
++        if (now.tv_sec - start.tv_sec >= (long)limit) return -ETIMEDOUT;
++        usleep(20000);
++    }
++}
+diff --git a/src/voice/voice_asr.c b/src/voice/voice_asr.c
+index 4792bde..d6fd6b3 100644
+--- a/src/voice/voice_asr.c
++++ b/src/voice/voice_asr.c
+@@ -100,10 +100,16 @@ int voice_asr_recognize(const unsigned char* pcm_data,
+     return s_active->recognize(pcm_data, pcm_len, text_out, text_cap);
+ }
+ 
+-/* ── Streaming ASR (delegates to volc_asr streaming API) ─────── */
++/* Qiji: bind each live stream to the backend selected at open time. */
++extern void *qiji_aliyun_open(void);
++extern int qiji_aliyun_send(void *, const unsigned char *, size_t);
++extern int qiji_aliyun_finish(void *, char *, size_t);
++extern void qiji_aliyun_abort(void *);
++
+ 
+ struct voice_asr_stream {
+-    volc_asr_stream_t* inner;
++    void* inner;
++    int aliyun;
+ };
+ 
+ voice_asr_stream_t* voice_asr_stream_open(void)
+@@ -113,7 +119,9 @@ voice_asr_stream_t* voice_asr_stream_open(void)
+         return NULL;
+     }
+ 
+-    volc_asr_stream_t* inner = volc_asr_stream_open();
++    int aliyun = !strcmp(s_active->name, "aliyun");
++    if (!aliyun && strcmp(s_active->name, "volcengine")) return NULL;
++    void* inner = aliyun ? qiji_aliyun_open() : (void*)volc_asr_stream_open();
+ 
+     if (!inner) {
+         return NULL;
+@@ -122,11 +130,13 @@ voice_asr_stream_t* voice_asr_stream_open(void)
+     voice_asr_stream_t* s = calloc(1, sizeof(*s));
+ 
+     if (!s) {
+-        volc_asr_stream_abort(inner);
++        if (aliyun) qiji_aliyun_abort(inner);
++        else volc_asr_stream_abort(inner);
+         return NULL;
+     }
+ 
+     s->inner = inner;
++    s->aliyun = aliyun;
+     return s;
+ }
+ 
+@@ -137,7 +147,7 @@ int voice_asr_stream_send(voice_asr_stream_t* s,
+         return -EINVAL;
+     }
+ 
+-    return volc_asr_stream_send(s->inner, pcm, len);
++    return s->aliyun ? qiji_aliyun_send(s->inner, pcm, len) : volc_asr_stream_send(s->inner, pcm, len);
+ }
+ 
+ int voice_asr_stream_finish(voice_asr_stream_t* s,
+@@ -147,7 +157,7 @@ int voice_asr_stream_finish(voice_asr_stream_t* s,
+         return -EINVAL;
+     }
+ 
+-    int ret = volc_asr_stream_finish(s->inner, text_out, text_cap);
++    int ret = s->aliyun ? qiji_aliyun_finish(s->inner, text_out, text_cap) : volc_asr_stream_finish(s->inner, text_out, text_cap);
+ 
+     /* s->inner is freed by volc_asr_stream_finish */
+     free(s);
+@@ -160,6 +170,7 @@ void voice_asr_stream_abort(voice_asr_stream_t* s)
+         return;
+     }
+ 
+-    volc_asr_stream_abort(s->inner);
++    if (s->aliyun) qiji_aliyun_abort(s->inner);
++    else volc_asr_stream_abort(s->inner);
+     free(s);
+ }
+diff --git a/src/voice/voice_channel.c b/src/voice/voice_channel.c
+index 8487250..1722a51 100644
+--- a/src/voice/voice_channel.c
++++ b/src/voice/voice_channel.c
+@@ -603,12 +603,32 @@ int voice_channel_init(void)
+     if (!s_backends_registered) {
+         volc_tts_register();
+         volc_asr_register();
++        extern void qiji_aliyun_register(void);
++        qiji_aliyun_register();
++        extern void qiji_aliyun_tts_register(void);
++        qiji_aliyun_tts_register();
+         s_backends_registered = 1;
+     }
+ 
+     return 0;
+ }
+ 
++/* A stalled speaker must not leave PTT on "opening microphone" forever. */
++static int qiji_lock_speech(void)
++{
++    struct timespec start, now;
++    clock_gettime(CLOCK_MONOTONIC, &start);
++    for (;;) {
++        int ret = pthread_mutex_trylock(&s_voice.speak_lock);
++        if (!ret) return 0;
++        if (ret != EBUSY) return -ret;
++        clock_gettime(CLOCK_MONOTONIC, &now);
++        if ((now.tv_sec - start.tv_sec) * 1000 +
++            (now.tv_nsec - start.tv_nsec) / 1000000 >= 5000) return -ETIMEDOUT;
++        usleep(10000);
++    }
++}
++
+ int voice_channel_start(void)
+ {
+     pthread_mutex_lock(&s_voice.lock);
+@@ -641,7 +661,8 @@ int voice_channel_start(void)
+ 
+         /* Wait for the speak thread to finish — speak_lock is held
+          * for the entire duration of voice_channel_speak(). */
+-        pthread_mutex_lock(&s_voice.speak_lock);
++        int lock_ret = qiji_lock_speech();
++        if (lock_ret) return lock_ret;
+         pthread_mutex_unlock(&s_voice.speak_lock);
+ 
+         syslog(LOG_INFO,
+@@ -910,7 +931,7 @@ int voice_channel_stop_with_text(char* text_out, size_t text_cap)
+             strncpy(text_out, text, text_cap - 1);
+             text_out[text_cap - 1] = '\0';
+         }
+-        return 0;
++        return ret;
+     }
+ 
+     /* Batch fallback: synchronous ASR inline (no thread) */
+@@ -1007,7 +1028,8 @@ int voice_channel_speak(const char* text)
+     }
+     pthread_mutex_unlock(&s_voice.lock);
+ 
+-    pthread_mutex_lock(&s_voice.speak_lock);
++    int lock_ret = qiji_lock_speech();
++        if (lock_ret) return lock_ret;
+ 
+     /* ── AEC workaround: reject TTS while PTT is recording ── */
+     pthread_mutex_lock(&s_voice.lock);
+@@ -1081,6 +1103,9 @@ int voice_channel_speak(const char* text)
+         + (tts_net.tv_nsec - s_tts_start.tv_nsec) / 1000000;
+     syslog(LOG_INFO, "[%s] TTS network done: %ldms\n", TAG, net_ms);
+ 
++    extern int qiji_audio_playback_finish(audio_playback_t *);
++    if (!ret) ret = qiji_audio_playback_finish(pb);
++
+     /* Unregister active playback */
+     pthread_mutex_lock(&s_voice.lock);
+     s_voice.tts_pb = NULL;
+diff --git a/src/voice/voice_tts.c b/src/voice/voice_tts.c
+index 1eccad7..9013de1 100644
+--- a/src/voice/voice_tts.c
++++ b/src/voice/voice_tts.c
+@@ -110,6 +110,10 @@ int voice_tts_speak_stream(const char* text,
+         return -ENODEV;
+     }
+ 
++    extern int qiji_aliyun_tts_stream(const char *, voice_tts_chunk_cb, void *);
++    if (!strcmp(s_active->name, "aliyun"))
++        return qiji_aliyun_tts_stream(text, cb, user_data);
++    if (strcmp(s_active->name, "volcengine")) return -ENOTSUP;
+     return volc_tts_ws_synthesize_stream(text,
+         (volc_tts_chunk_cb)cb, user_data);
+ }

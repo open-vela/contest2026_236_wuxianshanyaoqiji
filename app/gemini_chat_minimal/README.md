@@ -1,7 +1,11 @@
-# Gemini-S1 最小对话界面
+# Gemini-S1 藤田琴音对话界面（v0.4.0）
+
+角色行为、关系知识与来源见 [character/README.md](character/README.md)。旧版本的绮迹酱身份已停用；当前默认人设由知识卡生成，设备已有 SOUL 需要通过部署工具显式更新。角色迭代与测试记录见[本次说明](../../docs/kotone-persona-20260920.md)。
+
+新增分层动画实现与安装入口：`tools/prepare_layered_ui.py`。使用 12 个活动部件和 4 个眼/嘴差分，支持呼吸、摆头、延迟发辫、眨眼、真实 PCM 音量嘴型；保留 8 张整图差分和缺资源回退。见[分层动画说明](../../docs/layered-ui-20260920.md)，尚待上板验收。
 
 适配 Gemini-S1 的 2.8 寸 ILI9341 SPI 屏，以本次从官方比赛分支独立构建的 `nsh_minidisplay` 为显示基线。
-界面仅保留点击开始/停止录音、识别文字和模型回复；顶部单行显示网络及状态，底部录音按钮高 58px。使用阿里 ASR / TTS，保留 ADB 文本诊断命令。
+当前界面为 240×320 竖屏：顶部 20px 小字状态轮播，右侧显示北京时间和版本号；中间 8 种动作位图、前景半透明对话、右下角浮动 44px 麦克风图标按钮，录音中显示停止方块；内外间距统一 8px，卡片圆角 16px、文本框圆角 8px。板上 ENTER 同样支持开始/结束录音，40ms 消抖、长按不连发。长回复在播放期间近似滚动，播放后可循环阅读。图片来源及边界见 ARTWORK.md。使用阿里 ASR / TTS，保留 ADB 文本诊断命令。
 这不是离线大模型；没有联网或未配置服务时会显示错误，不生成假的 AI 回复。
 
 ## 当前验证边界
@@ -24,7 +28,7 @@
 python3 /path/to/contest/tools/prepare_official_chat.py "$PWD"
 bash packages/ai_agent/fix_gemini_s1.sh
 # 官方音频补丁只在干净树执行一次；之后安装应用修复。
-python3 /path/to/contest/tools/prepare_audio_unblock.py "$PWD"
+python3 /path/to/contest/tools/prepare_sprite_ui.py "$PWD"
 ./build.sh vendor/allwinnertech/boards/r528/r528s3-gemini-s1/configs/qiji_chat/ -j4
 
 source build/envsetup.sh
@@ -34,7 +38,7 @@ lunch_nuttx r528s3-gemini-s1
 pack
 ```
 
-准备脚本保留官方 LCD 配置，增加应用、音频及 AI 所需选项。
+准备脚本使用官方 ILI9341 竖屏选项，同步适配 TPADC 触摸坐标，并增加应用、音频及 AI 所需选项。竖屏真机方向与点击效果待验收。
 关闭 QuickApp 是为了避免板级 Make.defs 强制链接预编译媒体库，使官方音频源码补丁实际参与最终链接。
 另外启用 `MBEDTLS_NET_C`、`PIPES`、`SYSTEM_POPEN`，对应 AI Agent 的 TLS 与网络管理源码依赖。
 

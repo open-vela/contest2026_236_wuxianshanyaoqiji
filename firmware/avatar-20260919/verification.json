@@ -1,0 +1,40 @@
+{
+  "image": "/home/vela/gemini-official-clean-20260919/vendor/allwinnertech/lichee/out/r528s3/gemini-s1_nand/rtos_nuttx_r528s3-gemini-s1_uart0_128Mnand.img",
+  "bytes": 27411456,
+  "sha256": "00292de7b2156516389bb8e4b7423cf62d4a56084ff25e722ad76ef07ba63096",
+  "components": {
+    "boot0_nand.fex": {
+      "bytes": 45056,
+      "sha256": "20cea5ee8e0cec1767b8c8c5d69c84f149e2a96069ca171620b300162b6facbc",
+      "offset": 76800,
+      "egon_checksum_valid": true
+    },
+    "fes1.fex": {
+      "bytes": 20640,
+      "sha256": "ba49d6d9a46da96b6ab57214ef8e1bad3c2d71dfdcd9e783b25819b16747b35c",
+      "offset": 762880,
+      "egon_checksum_valid": true
+    },
+    "boot_package.fex": {
+      "bytes": 655360,
+      "sha256": "d2cf25f2c77b5ab876b6befdb9fb70c943538172a71345025f6555d4bdf28fe4",
+      "offset": 784384
+    },
+    "nsh.fex": {
+      "bytes": 5507616,
+      "sha256": "e15088028c8a447976b3260ef556ea51a895e7f13a9b2c3827e5f076cd24a22c",
+      "offset": 1993728
+    },
+    "res.fex": {
+      "bytes": 8847360,
+      "sha256": "c4dae67f5b57e4a0b4ee7a922cb84db4aeda2d735c373eaf78f76fd140887299",
+      "offset": 7502848
+    },
+    "usrdata.fex": {
+      "bytes": 11059200,
+      "sha256": "dd8420ab01e72df80b77e321348bd87ed7a7ee6e31a4c817eb8d3a65f9b1e0d8",
+      "offset": 16351232
+    }
+  },
+  "hardware_verified": false
+}

@@ -1,0 +1,28 @@
+{
+  "status": "PASS (real HTTP and cloud; synthetic input; no physical playback)",
+  "upload_bytes": 106560,
+  "reply_bytes": 428640,
+  "rate": 24000,
+  "transcript": "你好，小程，今天我想放松一下，你有什么建议？",
+  "reply": "可以靠在软垫子上闭着眼听轻缓的白噪音，比如雨声或林间风声，也能翻本带彩图的闲书，不用费脑，慢慢看就好。",
+  "stages": [
+    {
+      "state": "recognizing",
+      "seconds": 0.02
+    },
+    {
+      "state": "thinking",
+      "seconds": 4.54
+    },
+    {
+      "state": "synthesizing",
+      "seconds": 5.6
+    },
+    {
+      "state": "ready",
+      "seconds": 7.15
+    }
+  ],
+  "device_microphone": "NOT RUN",
+  "device_playback": "NOT RUN"
+}

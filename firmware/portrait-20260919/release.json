@@ -1,0 +1,28 @@
+{
+  "image": "qiji-chat-portrait.img",
+  "sha256": "d2f928db4e9d996fc219d0b645a5132fd9a0f20919ff195d6442db0f309613b6",
+  "bytes": 27427840,
+  "resolution": [
+    240,
+    320
+  ],
+  "orientation": "ILI9341 hardware portrait",
+  "status_height": 20,
+  "status_font_px": 12,
+  "dialogue_font_px": 14,
+  "voice_button_height": 46,
+  "ui": "Original chibi girl, translucent dialogue overlay, automatic reply pagination",
+  "touch": "Clamped portrait TPADC coordinates; host corner and full-range tests passed",
+  "preview": "Actual app view + official LVGL/FreeType + bundled MiSans",
+  "asr": "paraformer-realtime-v2",
+  "llm": "doubao-seed-character-260628",
+  "tts": "qwen-audio-3.1-tts-flash",
+  "voice": "longanlingxi_v3.1",
+  "inherited_fixes": "capture-idle and original Qiji persona",
+  "credentials_embedded": false,
+  "hardware_verified": false,
+  "physical_touch_verified": false,
+  "microphone_verified": false,
+  "speaker_verified": false,
+  "build_environment": "WSL2 Ubuntu 24.04; outside official supported environment"
+}

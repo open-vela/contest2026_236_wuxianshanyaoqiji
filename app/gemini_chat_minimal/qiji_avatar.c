@@ -4,10 +4,27 @@
  * Native 96x104 artwork, clipped to a small stage to limit SPI redraw traffic.
  */
 #include "qiji_avatar.h"
+#include "qiji_sprite.h"
+#include "qiji_layout.h"
 
 static lv_obj_t *figure, *eye_l, *eye_r, *mouth, *cheek_l, *cheek_r;
 static lv_obj_t *orb, *dots[3], *shadow;
-static int center_y;
+static int center_y, scale = 256;
+static bool use_sprite;
+
+static int px(int value) { return value * scale / 256; }
+
+/* Scale geometry once, without an off-screen transform framebuffer. */
+static void scale_children(lv_obj_t *parent)
+{
+    for (uint32_t i = 0; i < lv_obj_get_child_count(parent); i++) {
+        lv_obj_t *child = lv_obj_get_child(parent, i);
+        lv_obj_set_pos(child, px(lv_obj_get_x(child)), px(lv_obj_get_y(child)));
+        lv_obj_set_size(child, px(lv_obj_get_width(child)), px(lv_obj_get_height(child)));
+        lv_obj_set_style_radius(child, px(lv_obj_get_style_radius(child, 0)), 0);
+        scale_children(child);
+    }
+}
 
 static lv_obj_t *shape(lv_obj_t *parent, int x, int y, int w, int h,
                        int radius, uint32_t color)
@@ -25,15 +42,19 @@ static lv_obj_t *shape(lv_obj_t *parent, int x, int y, int w, int h,
 
 void qiji_avatar_create(lv_obj_t *parent, int x, int y, int width, int height)
 {
-    lv_obj_t *stage = shape(parent, x, y, width, height, 12, 0x302c46);
+    lv_obj_t *stage = shape(parent, x, y, width, height, QIJI_CARD_RADIUS, 0x302c46);
     shape(stage, 9, 17, 3, 3, 2, 0x8e7caa);
     shape(stage, width - 13, height - 24, 4, 4, 2, 0x8e7caa);
-    center_y = (height - 104) / 2;
-    shadow = shape(stage, (width - 56) / 2, center_y + 98, 56, 5, 3, 0x201e34);
+    use_sprite = width >= 200 && height >= 272 && qiji_sprite_create(stage, width, height);
+    if (use_sprite) return;
+    scale = width >= 200 && height >= 220 ? 448 : 256;
+    center_y = (height - px(104)) / 2;
+    shadow = shape(stage, (width - px(56)) / 2, center_y + px(98),
+                   px(56), px(5), px(3), 0x201e34);
     figure = lv_obj_create(stage);
     lv_obj_remove_style_all(figure);
-    lv_obj_set_size(figure, 96, 104);
-    lv_obj_set_pos(figure, (width - 96) / 2, center_y);
+    lv_obj_set_size(figure, px(96), px(104));
+    lv_obj_set_pos(figure, (width - px(96)) / 2, center_y);
     lv_obj_remove_flag(figure, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);
     /* Two-head-tall silhouette: bob hair, puff sleeves and a lilac dress. */
     shape(figure, 12, 8, 72, 66, 28, 0x372d48);
@@ -86,28 +107,31 @@ void qiji_avatar_create(lv_obj_t *parent, int x, int y, int width, int height)
     orb = shape(figure, 72, 27, 5, 5, 3, 0xffdfa5);
     for (int i = 0; i < 3; i++)
         dots[i] = shape(figure, 36 + i * 10, 1, 4, 4, 2, 0xffd3e4);
+    lv_obj_update_layout(figure);
+    if (scale != 256) scale_children(figure);
     qiji_avatar_update(QIJI_IDLE, 0);
 }
 
 void qiji_avatar_update(qiji_avatar_state_t state, uint32_t tick)
 {
+    if (use_sprite) { qiji_sprite_update(state, tick); return; }
     if (!figure) return;
     /* 3.2-second breathing, 140ms blink every 4.7 seconds. */
     uint32_t breath = tick % 3200;
     int rise = (breath < 1600 ? breath : 3200 - breath) / 530;
-    lv_obj_set_y(figure, center_y - rise);
+    lv_obj_set_y(figure, center_y - px(rise));
     bool blink = tick % 4700 > 4560;
     int eye_h = blink ? 2 : state == QIJI_REPLY ? 11 : 16;
-    lv_obj_set_height(eye_l, eye_h);
-    lv_obj_set_height(eye_r, eye_h);
-    lv_obj_set_y(eye_l, 39 + (16 - eye_h) / 2);
-    lv_obj_set_y(eye_r, 39 + (16 - eye_h) / 2);
+    lv_obj_set_height(eye_l, px(eye_h));
+    lv_obj_set_height(eye_r, px(eye_h));
+    lv_obj_set_y(eye_l, px(39 + (16 - eye_h) / 2));
+    lv_obj_set_y(eye_r, px(39 + (16 - eye_h) / 2));
     int look = state == QIJI_THINK ? 2 : 0;
-    lv_obj_set_x(eye_l, 30 + look);
-    lv_obj_set_x(eye_r, 55 + look);
+    lv_obj_set_x(eye_l, px(30 + look));
+    lv_obj_set_x(eye_r, px(55 + look));
     /* A text reply has a stable happy face, not fabricated audio lip-sync. */
-    lv_obj_set_size(mouth, state == QIJI_REPLY ? 9 : 7,
-                    state == QIJI_LISTEN ? 5 : state == QIJI_REPLY ? 5 : 2);
+    lv_obj_set_size(mouth, px(state == QIJI_REPLY ? 9 : 7),
+                    px(state == QIJI_LISTEN ? 5 : state == QIJI_REPLY ? 5 : 2));
     lv_obj_set_style_bg_color(orb, lv_color_hex(state == QIJI_ERROR ? 0xf2a78c :
                                 state == QIJI_LISTEN ? 0x9df5cf : 0xffd58e), 0);
     lv_obj_set_style_bg_opa(cheek_l, state == QIJI_REPLY ? LV_OPA_COVER : LV_OPA_60, 0);

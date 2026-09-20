@@ -1,0 +1,21 @@
+{
+  "tts_test_input": {
+    "bytes": 159840,
+    "rate": 24000,
+    "seconds": 3.82
+  },
+  "asr": {
+    "text": "你好，小程，今天我想放松一下，你有什么建议？",
+    "seconds": 4.29
+  },
+  "llm": {
+    "text": "可以窝在软乎乎的地方听轻音，或者看部短动画，要是想动一动，慢走吹吹风也舒服，怎么放松都好呀。",
+    "seconds": 1.26
+  },
+  "tts_reply": {
+    "bytes": 432480,
+    "rate": 24000,
+    "seconds": 1.82
+  },
+  "status": "PASS (synthetic host audio, not device microphone)"
+}

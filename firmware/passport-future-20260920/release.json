@@ -1,0 +1,19 @@
+{
+  "version": "xiaocheng-0.2-silver-future",
+  "sha256": "385b0b6b655c9b65f2cbd1773bf661718bcf46de727b69cde16645e427670f16",
+  "app_elf_sha256": "3cdbb2b73472852e6bb88b10377dea98f9da6907e52a880bb27de4445aba7692",
+  "Build": "PASS",
+  "Host tests": "PASS (full gate, actual LVGL 60-frame rendering and CJK glyph checks)",
+  "Device tests": "NOT RUN for this portrait revision; previous config-fix device is online",
+  "app_offset": "0x10000",
+  "app_image_sha256": "a2e6025ce75fac8919682778c273aed7eb1a249b761b0eb31962406500443530",
+  "segmented_update_preserves_nvs": true,
+  "partition_matches_installed_config_fix": true,
+  "portrait": "Original silver-haired future traveller, blue/violet outfit; 4 RGB565A8 frames, 806400 flash bytes",
+  "Unverified": [
+    "physical rendering",
+    "device RAM and animation during Wi-Fi/audio",
+    "button scrolling",
+    "two-device conversation"
+  ]
+}

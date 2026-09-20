@@ -1,0 +1,52 @@
+diff --git a/libavfilter/asink_abufsink.c b/libavfilter/asink_abufsink.c
+index 7fad4d2cfc..5e9895ac17 100644
+--- a/libavfilter/asink_abufsink.c
++++ b/libavfilter/asink_abufsink.c
+@@ -303,13 +303,11 @@ static int abufsink_init(AVFilterContext *ctx)
+ static int abufsink_query_formats(const AVFilterContext *ctx, AVFilterFormatsConfig **cfg_in,
+                                AVFilterFormatsConfig **cfg_out)
+ {
+-    AVFilterChannelLayouts *layouts = NULL;
+     AVFilterFormats *formats = NULL;
+     ABufSinkPriv *sink = ctx->priv;
+     int ret = AVERROR(EINVAL), i;
+ 
+     for (i = 0; i < ctx->nb_inputs; i++) {
+-        AVChannelLayout list64[] = { { 0 }, { 0 } };
+         int list[] = { 0, -1 };
+ 
+         list[0] = sink->sample_fmt;
+@@ -322,24 +320,15 @@ static int abufsink_query_formats(const AVFilterContext *ctx, AVFilterFormatsCon
+         if (ret < 0)
+             goto out;
+ 
+-        formats = NULL;
+-        list[0] = sink->sample_rate;
+-        formats = ff_make_format_list(list);
+-        if (!formats)
+-            goto out;
+-
+-        ff_formats_unref(&cfg_in[i]->samplerates);
+-        ret = ff_formats_ref(formats, &cfg_in[i]->samplerates);
+-        if (ret < 0)
+-            goto out;
+-
+-        list64[0] = sink->ch_layout;
+-        layouts = ff_make_channel_layout_list(list64);
+-        if (!layouts)
+-            goto out;
+-
+-        ff_channel_layouts_unref(&cfg_in[i]->channel_layouts);
+-        ret = ff_channel_layouts_ref(layouts, &cfg_in[i]->channel_layouts);
++        /* Do not constrain sample_rate / channel_layout on the link: the
++         * internal amix resamples any input to the recorder-requested target
++         * (set via the "link" command). Advertising the amix target here would
++         * force the upstream link format and make pass-through filters (e.g.
++         * volume) deliver frames that fail ff_filter_frame's consistency check.
++         * Leaving these NULL means "accept any", so the link inherits the
++         * source format and frames flow; amix then converts internally.
++         */
++        ret = 0;
+     }
+ 
+ out:

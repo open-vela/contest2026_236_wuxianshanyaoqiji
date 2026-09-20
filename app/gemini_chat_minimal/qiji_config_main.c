@@ -13,6 +13,7 @@
 #include "voice/voice_asr.h"
 #include "voice/voice_tts.h"
 #include "voice/voice_channel.h"
+#include "qiji_duet.h"
 
 extern bool qiji_chat_is_ready(void);
 extern int qiji_chat_submit(const char *text);
@@ -52,10 +53,15 @@ int qiji_config_main(int argc, char **argv)
         puts("qiji_config set_aliyun_asr <key> | test_asr <pcm_file> | voice_status");
         puts("qiji_config tts_voice <voice_id> | tts_style natural|cheerful|gentle");
         puts("qiji_config speak <text> | test_tts <text> <pcm_file>");
+        puts("qiji_config duet <server_ipv4> <port> <pairing_token> | duet_off");
         return 1;
     }
     if (!strcmp(argv[1], "wifi") && argc == 4)
         return qiji_wifi_connect(argv[2], argv[3]) ? 1 : 0;
+    if (!strcmp(argv[1], "duet") && argc == 5)
+        return qiji_duet_configure(argv[2], argv[3], argv[4]) ? 1 : 0;
+    if (!strcmp(argv[1], "duet_off") && argc == 2)
+        return qiji_duet_configure("", NULL, NULL) ? 1 : 0;
     if (!strcmp(argv[1], "wifi_reconnect") && argc == 2)
         return qiji_wifi_connect(NULL, NULL) ? 1 : 0;
     if (!strcmp(argv[1], "result") && argc == 2) {

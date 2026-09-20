@@ -1,0 +1,21 @@
+{
+  "device": "Gemini-S1 / 1234",
+  "firmware": "Sep 20 2026 11:58:29 dd92bcf4257",
+  "initial_issue": "clock not set; record blocked",
+  "action": "UTC calibrated through ADB; clock=set verified",
+  "wifi": "192.168.5.158 RUNNING",
+  "aliyun_key_present": true,
+  "actual_capture": {
+    "first_pcm_ms": 482,
+    "pcm_bytes_read": 150384,
+    "batch_bytes": 131056,
+    "duration_from_pcm_s": 4.7,
+    "stop_ms": 11
+  },
+  "asr_result": "Arrearage returned by Aliyun in pre-open, recording-thread retry and batch fallback",
+  "asr_errno": -5,
+  "ui_issue": "Service failure appears as no speech recognized (0)",
+  "conclusion": "Current recognition is blocked by provider account/quota state. Captured bytes prove capture flow, not intelligible speech quality.",
+  "pending": "Restore service billing/quota for this key or configure an authorized working key, then retry real speech.",
+  "log": "after.log"
+}

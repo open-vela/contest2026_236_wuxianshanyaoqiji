@@ -1,0 +1,13 @@
+{
+  "version": "xiaocheng-0.2.1-refined-eyes",
+  "sha256": "9f5f9c4a02fcfb37c0bbfda5c5c9cdd4e9c125f19dc564a7feb78fbf8ed4851f",
+  "app_elf_sha256": "3a32949c25208163a194043016b36cfa3aeb5ca13fa317af6a6ee4c7f8b63207",
+  "Build": "PASS",
+  "Host tests": "PASS (full gate, LVGL preview, distinct eye frames)",
+  "Device tests": "PENDING; recorded separately after flash",
+  "app_offset": "0x10000",
+  "app_image_sha256": "db06a56fc250eb25b9b3e7d48815c48748b743b3f28bce6e6d58a030795ddf6b",
+  "segmented_update_preserves_nvs": true,
+  "partition_matches_installed_config_fix": true,
+  "portrait": "Silver-haired future traveller; rounded eyes, layered irises, half-closed blink transition; 5 RGB565A8 frames, 1008000 flash bytes"
+}

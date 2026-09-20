@@ -1,0 +1,110 @@
+diff --git a/src/agent_main.c b/src/agent_main.c
+index 9d676c2..a371619 100644
+--- a/src/agent_main.c
++++ b/src/agent_main.c
+@@ -700,6 +700,11 @@ int ai_agent_main(int argc, char* argv[])
+     syslog(LOG_INFO, "[%s] [boot +%ldms] AI Agent ready. Type 'help' in NSH for commands.\n",
+         TAG, boot_ms(&t0));
+ 
++#ifdef CONFIG_GEMINI_CHAT_MINIMAL
++    extern void qiji_chat_agent_ready(bool ready);
++    qiji_chat_agent_ready(true);
++#endif
++
+     /* Block main thread until shutdown is requested */
+     while (!g_shutdown_requested) {
+         sleep(1);
+@@ -707,6 +712,10 @@ int ai_agent_main(int argc, char* argv[])
+ 
+     syslog(LOG_INFO, "[%s] Shutdown requested — stopping services...\n", TAG);
+ 
++#ifdef CONFIG_GEMINI_CHAT_MINIMAL
++    qiji_chat_agent_ready(false);
++#endif
++
+     /* Wake all threads blocked on message bus before stopping services */
+     message_bus_wakeup();
+ 
+diff --git a/src/core/agent_loop.c b/src/core/agent_loop.c
+index 3d9dec3..eed46e6 100644
+--- a/src/core/agent_loop.c
++++ b/src/core/agent_loop.c
+@@ -65,6 +65,16 @@ static bool llm_call_timed_out(uint32_t latency_ms);
+ #define LLM_TIMEOUT_TASK_COMPLETE_MSG \
+     "任务已完成，但生成确认消息超时。"
+ 
++/* TLS/NTP may change CLOCK_REALTIME during the first request. */
++static void qiji_monotonic_timeval(struct timeval *value, void *unused)
++{
++    (void)unused;
++    struct timespec now = {0};
++    clock_gettime(CLOCK_MONOTONIC, &now);
++    value->tv_sec = now.tv_sec;
++    value->tv_usec = now.tv_nsec / 1000;
++}
++
+ /* ── Clock-safe elapsed time calculation ───────────────────── */
+ 
+ static inline uint32_t calc_elapsed_ms(const struct timeval* t0,
+@@ -820,9 +830,9 @@ static char* force_finish_reply(const char* system_prompt,
+     llm_response_t resp;
+     char* result = NULL;
+     struct timeval t0, t1;
+-    gettimeofday(&t0, NULL);
++    qiji_monotonic_timeval(&t0, NULL);
+     int err = llm_chat_tools(system_prompt, messages, NULL, &resp);
+-    gettimeofday(&t1, NULL);
++    qiji_monotonic_timeval(&t1, NULL);
+     uint32_t ms = calc_elapsed_ms(&t0, &t1);
+     bool timed_out = llm_call_timed_out(ms);
+ 
+@@ -990,9 +1000,9 @@ static char* handle_task_complete(const char* sys_prompt, cJSON* messages,
+     llm_response_t final_resp;
+     char* result = NULL;
+     struct timeval t0, t1;
+-    gettimeofday(&t0, NULL);
++    qiji_monotonic_timeval(&t0, NULL);
+     int err = llm_chat_tools(sys_prompt, messages, NULL, &final_resp);
+-    gettimeofday(&t1, NULL);
++    qiji_monotonic_timeval(&t1, NULL);
+     uint32_t ms = calc_elapsed_ms(&t0, &t1);
+     bool timed_out = llm_call_timed_out(ms);
+ 
+@@ -1065,9 +1075,9 @@ static char* run_react_loop(const char* sys_prompt, cJSON* messages,
+ 
+         llm_response_t resp;
+         struct timeval tv_start, tv_end;
+-        gettimeofday(&tv_start, NULL);
++        qiji_monotonic_timeval(&tv_start, NULL);
+         int err = llm_chat_tools(sys_prompt, messages, tools_json, &resp);
+-        gettimeofday(&tv_end, NULL);
++        qiji_monotonic_timeval(&tv_end, NULL);
+         uint32_t latency_ms = calc_elapsed_ms(&tv_start, &tv_end);
+ 
+         /* Router failover: on LLM call failure, try next backend */
+@@ -1083,10 +1093,10 @@ static char* run_react_loop(const char* sys_prompt, cJSON* messages,
+                 router_idx = next_idx;
+                 trace.backend_idx = next_idx;
+                 llm_response_free(&resp);
+-                gettimeofday(&tv_start, NULL);
++                qiji_monotonic_timeval(&tv_start, NULL);
+                 err = llm_chat_tools(sys_prompt, messages,
+                     tools_json, &resp);
+-                gettimeofday(&tv_end, NULL);
++                qiji_monotonic_timeval(&tv_end, NULL);
+                 latency_ms = calc_elapsed_ms(&tv_start, &tv_end);
+             }
+         }
+@@ -1183,10 +1193,10 @@ static char* run_react_loop(const char* sys_prompt, cJSON* messages,
+                     router_idx = prem_idx;
+                     trace.backend_idx = prem_idx;
+ 
+-                    gettimeofday(&tv_start, NULL);
++                    qiji_monotonic_timeval(&tv_start, NULL);
+                     err = llm_chat_tools(sys_prompt, messages,
+                         tools_json, &resp);
+-                    gettimeofday(&tv_end, NULL);
++                    qiji_monotonic_timeval(&tv_end, NULL);
+                     latency_ms = calc_elapsed_ms(&tv_start, &tv_end);
+ 
+                     /* Watchdog check on cascade retry */

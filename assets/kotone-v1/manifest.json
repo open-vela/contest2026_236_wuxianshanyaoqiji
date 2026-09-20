@@ -1,0 +1,110 @@
+{
+  "source": "User-provided Fujita Kotone image",
+  "reference_path": "E:/zxz12/Pictures/ktn/idol_3.png",
+  "source_sha256": "fb1f46aa877ef8da302baaa950e7759fbf64171cea97d3741281fb05ee3094b4",
+  "generated_differences": true,
+  "available": [
+    "idle",
+    "blink",
+    "listen",
+    "think",
+    "speak",
+    "happy",
+    "comfort",
+    "surprise"
+  ],
+  "pending": [],
+  "format": "LVGL9 RGB565A8 176x272",
+  "original_project_artwork": false,
+  "alpha": "Native alpha preserved; bounding box measured at alpha>=32 to ignore near-transparent stray specks; Lanczos scaled to 256px height, feet baseline 264",
+  "assets": [
+    {
+      "state": "idle",
+      "raw_size": [
+        1254,
+        1254
+      ],
+      "raw_sha256": "3e77a3bc17e1ee480d738df10e80fab34f38021d77ef3c1d4de177a7e82dfbaf",
+      "png_sha256": "36a52a708006da5fae751dfab6735e0953b39bb3ad249261af5193f59a782df2",
+      "bin_sha256": "c221fe31ba517756a43905611a82617d136fc2f355ef9720befa13aa9b018bd2",
+      "bin_bytes": 143628
+    },
+    {
+      "state": "blink",
+      "raw_size": [
+        1254,
+        1254
+      ],
+      "raw_sha256": "35c41a2169aba2dcf9eb34778edad1a55d2f6abbbca1a514bcd8ad4c2e4ae110",
+      "png_sha256": "bda0879e0b12dbaff8232123f44833388a8fad5338498105133f4fab32892ded",
+      "bin_sha256": "765663b61c923136a67533641e02c2a4b3af90bcc2d7e73e1e57d530fc668cc1",
+      "bin_bytes": 143628
+    },
+    {
+      "state": "listen",
+      "raw_size": [
+        1254,
+        1254
+      ],
+      "raw_sha256": "023eb0c8bf3f73abf213c9f04ee99d2f3e91ef3d6cf5d98c01ed90de1caebc7b",
+      "png_sha256": "7d1cddbaf1182fc40e550a4cd78a72a942ba9b7620fe029a1b01e162d7f032bd",
+      "bin_sha256": "736531f595e6e1dc96ad2c71d2fcef9ffe6e520d2b775fa21bfff22d2ccca756",
+      "bin_bytes": 143628
+    },
+    {
+      "state": "think",
+      "raw_size": [
+        1254,
+        1254
+      ],
+      "raw_sha256": "7aec8d61e94cb08c6f62c3fc4178a2cdba253691ffedf1c16535adf3c0c7afa7",
+      "png_sha256": "aeae821e7427ae69ade4803f889d88d731122d0c0369f30a8615f5089c26eab3",
+      "bin_sha256": "5b80167120cc1f986809051dd96cb7d51a766247995d5608ef70d44639d9f4af",
+      "bin_bytes": 143628
+    },
+    {
+      "state": "speak",
+      "raw_size": [
+        1254,
+        1254
+      ],
+      "raw_sha256": "1b855cdca3eb24b6b720d178d9b4d239a2ca0b5f220fabff7fac48d75bdca0a7",
+      "png_sha256": "61f707e5db0c87ca7007e63dd928b36d3d77c45fdedf24bac222205a4b2b96b3",
+      "bin_sha256": "202d815d5ead2c9f4c508bb2a5ae20a48079dc2ad75516dd7846f6d5d2c3688d",
+      "bin_bytes": 143628
+    },
+    {
+      "state": "happy",
+      "raw_size": [
+        1254,
+        1254
+      ],
+      "raw_sha256": "668964b649569335d876ad9e7f00055fce173ad7199eb3cb6a70b253ed02d712",
+      "png_sha256": "e2b636c60452d74576441418fcd5591bab58cdb52553172881327b7b9fc0d8d3",
+      "bin_sha256": "e5c434fa2dd453d5fa51940cd574ee9d5a167cde65122b80ec84142f2d15a3f9",
+      "bin_bytes": 143628
+    },
+    {
+      "state": "comfort",
+      "raw_size": [
+        1254,
+        1254
+      ],
+      "raw_sha256": "562c31cf6e56de4fa81b404ff00ae2901846abc07ec56f82d3c43e0f980f455f",
+      "png_sha256": "d6aa95335ac3646b7ee09defaa1b225740f11a34de2df2de9469c8428649e282",
+      "bin_sha256": "1398984311d31ec2a416224ec353fd8ae2c8ad0c9ba9fc871f98c627e622d435",
+      "bin_bytes": 143628
+    },
+    {
+      "state": "surprise",
+      "raw_size": [
+        1254,
+        1254
+      ],
+      "raw_sha256": "e01aacaf2ab7dc9238863c66056d7a7ef2ebec343e47b682d95c00667782706a",
+      "png_sha256": "3e924aa765c239af6f37fce7fca9e0ceb1484d80fbad7faa5759a9d624278cec",
+      "bin_sha256": "b55eebdc637e22bf1b14f43aa949656301a9587926a6804d6e81d9af0d079975",
+      "bin_bytes": 143628
+    }
+  ]
+}

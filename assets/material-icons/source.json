@@ -1,0 +1,22 @@
+{
+  "repository": "https://github.com/google/material-design-icons",
+  "commit": "27e9ef1dbeedc13d682fece4a58e1eda4cb0961a",
+  "style": "Material Icons Round, 24px",
+  "assets": [
+    {
+      "name": "mic",
+      "url": "https://raw.githubusercontent.com/google/material-design-icons/27e9ef1dbeedc13d682fece4a58e1eda4cb0961a/src/av/mic/materialiconsround/24px.svg",
+      "sha256": "b5459f661300d55b0c137c777470e9d767b4076ce3a52606efc38bf9082d265c"
+    },
+    {
+      "name": "stop",
+      "url": "https://raw.githubusercontent.com/google/material-design-icons/27e9ef1dbeedc13d682fece4a58e1eda4cb0961a/src/av/stop/materialiconsround/24px.svg",
+      "sha256": "049fcd9815d1ed9aa68fb1d5e45d10ea7837ae9f11354c628ad8472334680797"
+    },
+    {
+      "name": "more_horiz",
+      "url": "https://raw.githubusercontent.com/google/material-design-icons/27e9ef1dbeedc13d682fece4a58e1eda4cb0961a/src/navigation/more_horiz/materialiconsround/24px.svg",
+      "sha256": "144aa1cb9a16b6bd9d738f6f57850ce88ca6c05d2daf3d0b74ac97c6ccde1c28"
+    }
+  ]
+}
