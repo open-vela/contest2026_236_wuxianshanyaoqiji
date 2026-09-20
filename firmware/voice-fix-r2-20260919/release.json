@@ -1,0 +1,23 @@
+{
+  "image": "qiji-chat-voice-fix-r2.img",
+  "sha256": "f40d5b0e62c49fb05431e1e43e4a597be22dac5841f869822359e6184b0a6b07",
+  "bytes": 27423744,
+  "asr": "paraformer-realtime-v2",
+  "llm": "doubao-seed-character-260628",
+  "host_cloud_lifecycle_verified": true,
+  "host_firmware_c_backend_cloud_verified": true,
+  "tts": "qwen-audio-3.1-tts-flash",
+  "voice": "longanlingxi_v3.1",
+  "host_tts_verified": true,
+  "host_playback_contract_verified": true,
+  "host_media_policy_verified": true,
+  "final_romfs_payload_verified": true,
+  "policy_fix": "Matched criteria/settings to official minimal graph; fixed incremental ROMFS dependencies",
+  "old_firmware_device_wifi_restored": true,
+  "old_firmware_media_failure_confirmed": true,
+  "hardware_verified": false,
+  "microphone_verified": false,
+  "speaker_verified": false,
+  "credentials_embedded": false,
+  "build_environment": "WSL2 Ubuntu 24.04; outside official supported environment"
+}

@@ -1,0 +1,16 @@
+{
+  "image": "qiji-chat-layered.img",
+  "sha256": "591a6ffea51255312ff50bde39339eb78ec9cc819a44be309f48ddd7822659c1",
+  "bytes": 28795904,
+  "implementation": "12 live layers + 4 eye/mouth alternatives + original 8 sprites",
+  "layer_format": "LVGL 9 ARGB8888 (BGRA bytes), cropped per layer",
+  "layer_bytes": 172732,
+  "mouth": "Real accepted PCM amplitude with estimated playback position; not phoneme alignment",
+  "build_verified": true,
+  "host_tests_passed": 6,
+  "packed_assets_verified": 24,
+  "hardware_verified": false,
+  "credentials_embedded": false,
+  "image_api_model": "gpt-image-2",
+  "image_api_provider": "https://sapi.riyuexy.cc/v1"
+}

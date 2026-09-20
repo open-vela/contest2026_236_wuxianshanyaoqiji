@@ -1,0 +1,12 @@
+{
+  "image": "qiji-chat-chibi-girl.img",
+  "sha256": "24923ae983377c1a0136f9eabc4b6425eaf84e2235c81c76f5dad5cb7ac96c08",
+  "bytes": 27411456,
+  "character": "Qiji / Lilac: original chibi girl drawn with LVGL shapes",
+  "hardware_verified": false,
+  "host_render_frames_verified": 50,
+  "third_party_character_assets": false,
+  "credentials_embedded": false,
+  "voice_lipsync": false,
+  "build_environment": "WSL2 Ubuntu 24.04; outside official supported environment"
+}

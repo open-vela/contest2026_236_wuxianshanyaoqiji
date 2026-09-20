@@ -1,0 +1,21 @@
+{
+  "version": "duet-0.1",
+  "transport": "LAN HTTP with computer coordinator",
+  "passport_upstream": "855d2106547988e33128e27aadff4fe98351fe14",
+  "passport_sha256": "7947565913a3d43617ebdbd8ddb89fc998dc1f700f7e0f1f515a552e815e99ee",
+  "gemini_sha256": "52fa436ada0f49b3c3fe763641721249c0d7dd39bbad66877d07494214efd4ac",
+  "build": "PASS",
+  "host_tests": "PASS",
+  "device_tests": "NOT RUN",
+  "cloud_tests": "NOT RUN",
+  "passport_flash_offset": "0x0",
+  "merged_flash_may_reset_nvs": true,
+  "host_tests_count": 13,
+  "font_glyphs_checked": 20976,
+  "unverified": [
+    "physical screens/buttons",
+    "Wi-Fi plus audio heap",
+    "real voice playback",
+    "two-device live AI encounter"
+  ]
+}

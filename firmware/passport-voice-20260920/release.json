@@ -1,0 +1,17 @@
+{
+  "version": "xiaocheng-0.3-voice",
+  "sha256": "82d77f33f93f74faea6e2cc4e914a4a82243659022d0485884223e66d514c351",
+  "app_elf_sha256": "2cbe0686a6abb44b6d09a0c4dcbfb1363a04a54693777fcd53650efb7a1babe5",
+  "app_image_sha256": "d9b92f487e3933fe9a43dcfeaa147453887678b7d33cc7fdea6809eaf7095923",
+  "app_offset": "0x10000",
+  "Build": "PASS",
+  "Host tests": "PASS: 21 Python protocol and regression tests, full firmware gate",
+  "Device tests": "NOT RUN for voice revision",
+  "partition_matches_installed_eyes": true,
+  "Unverified": [
+    "physical key recording",
+    "real cloud ASR/LLM/TTS",
+    "speaker playback",
+    "cancellation during device playback"
+  ]
+}

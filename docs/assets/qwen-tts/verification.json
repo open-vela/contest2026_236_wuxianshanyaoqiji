@@ -1,0 +1,25 @@
+{
+  "lingxi-gentle.wav": {
+    "seconds": 4.93,
+    "pcm_bytes": 236640,
+    "peak": 17327,
+    "first_pcm_ms": 1708
+  },
+  "lingxi-natural.wav": {
+    "seconds": 4.77,
+    "pcm_bytes": 228960,
+    "peak": 22687,
+    "first_pcm_ms": 642
+  },
+  "model": "qwen-audio-3.1-tts-flash",
+  "voice": "longanlingxi_v3.1",
+  "measurement": "Host execution of exact firmware C backend; single trials, including connection overhead",
+  "hardware_verified": false,
+  "asr_regression_passed": true,
+  "playback_contract_tests": [
+    "partial writes",
+    "EOF completion",
+    "error propagation",
+    "cancellation"
+  ]
+}

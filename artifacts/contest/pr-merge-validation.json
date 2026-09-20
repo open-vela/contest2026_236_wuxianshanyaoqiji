@@ -1,0 +1,18 @@
+{
+  "indexed_files": 720,
+  "indexed_bytes": 43515709,
+  "sensitive_matches": 0,
+  "log_sessions": 12,
+  "log_events": 2532,
+  "log_hashes_verified": true,
+  "old_log_files_preserved": 9,
+  "active_source_whitespace": "PASS; excludes frozen evidence, original logs, generated fonts and third-party OFL",
+  "tests": {
+    "duet": 22,
+    "collector": 7,
+    "board_acceptance": 6,
+    "persona_bytes": 3974
+  },
+  "firmware_rebuilt_this_submission": false,
+  "note": "Known-credential and pattern scan, not an exhaustive security audit. Cloud/device limitations are recorded separately."
+}

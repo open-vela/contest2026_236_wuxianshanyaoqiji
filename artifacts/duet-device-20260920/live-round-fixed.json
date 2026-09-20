@@ -1,0 +1,817 @@
+{
+  "started_at": "2026-09-20T09:08:40.908878+00:00",
+  "action": "start",
+  "real_device_polls_only": true,
+  "initial": {
+    "state": "waiting",
+    "topic": "忙碌之后，怎样安排一段轻松的休息",
+    "transcript": [],
+    "summary": "",
+    "error": "",
+    "pending": {},
+    "demo": false,
+    "text_only": false,
+    "peers": {
+      "qiji": true,
+      "xiaocheng": true
+    },
+    "ready": {
+      "qiji": true,
+      "xiaocheng": true
+    }
+  },
+  "events": [
+    {
+      "elapsed_s": 0.02,
+      "snapshot": {
+        "state": "generating",
+        "topic": "忙碌之后，怎样用十分钟、不花钱放松一下？你们各提一个可选办法，最后由主人选择。",
+        "transcript": [],
+        "summary": "",
+        "error": "",
+        "pending": {},
+        "demo": false,
+        "text_only": false,
+        "peers": {
+          "qiji": true,
+          "xiaocheng": true
+        },
+        "ready": {
+          "qiji": true,
+          "xiaocheng": true
+        }
+      }
+    },
+    {
+      "elapsed_s": 1.03,
+      "snapshot": {
+        "state": "summarizing",
+        "topic": "忙碌之后，怎样用十分钟、不花钱放松一下？你们各提一个可选办法，最后由主人选择。",
+        "transcript": [],
+        "summary": "",
+        "error": "",
+        "pending": {},
+        "demo": false,
+        "text_only": false,
+        "peers": {
+          "qiji": true,
+          "xiaocheng": true
+        },
+        "ready": {
+          "qiji": true,
+          "xiaocheng": true
+        }
+      }
+    },
+    {
+      "elapsed_s": 2.06,
+      "snapshot": {
+        "state": "speaking",
+        "topic": "忙碌之后，怎样用十分钟、不花钱放松一下？你们各提一个可选办法，最后由主人选择。",
+        "transcript": [],
+        "summary": "",
+        "error": "",
+        "pending": {
+          "qiji": {
+            "seq": 1,
+            "kind": "turn",
+            "speaker": "qiji",
+            "text": "那我提个，找个没人的地方瘫着，闭眼随便想点不用费脑子的开心事就行。",
+            "turn": 1,
+            "speaker_name": "藤田琴音",
+            "speak": true,
+            "audio": "",
+            "rate": 24000
+          },
+          "xiaocheng": {
+            "seq": 1,
+            "kind": "turn",
+            "speaker": "qiji",
+            "text": "那我提个，找个没人的地方瘫着，闭眼随便想点不用费脑子的开心事就行。",
+            "turn": 1,
+            "speaker_name": "藤田琴音",
+            "speak": false,
+            "audio": "",
+            "rate": 24000
+          }
+        },
+        "demo": false,
+        "text_only": false,
+        "peers": {
+          "qiji": true,
+          "xiaocheng": true
+        },
+        "ready": {
+          "qiji": true,
+          "xiaocheng": true
+        }
+      }
+    },
+    {
+      "elapsed_s": 9.14,
+      "snapshot": {
+        "state": "summarizing",
+        "topic": "忙碌之后，怎样用十分钟、不花钱放松一下？你们各提一个可选办法，最后由主人选择。",
+        "transcript": [
+          {
+            "speaker": "藤田琴音",
+            "text": "那我提个，找个没人的地方瘫着，闭眼随便想点不用费脑子的开心事就行。"
+          }
+        ],
+        "summary": "",
+        "error": "",
+        "pending": {},
+        "demo": false,
+        "text_only": false,
+        "peers": {
+          "qiji": true,
+          "xiaocheng": true
+        },
+        "ready": {
+          "qiji": true,
+          "xiaocheng": true
+        }
+      }
+    },
+    {
+      "elapsed_s": 34.2,
+      "snapshot": {
+        "state": "speaking",
+        "topic": "忙碌之后，怎样用十分钟、不花钱放松一下？你们各提一个可选办法，最后由主人选择。",
+        "transcript": [
+          {
+            "speaker": "藤田琴音",
+            "text": "那我提个，找个没人的地方瘫着，闭眼随便想点不用费脑子的开心事就行。"
+          }
+        ],
+        "summary": "",
+        "error": "",
+        "pending": {
+          "qiji": {
+            "seq": 2,
+            "kind": "turn",
+            "speaker": "xiaocheng",
+            "text": "我提个，找张白纸随便画点无意义的线条，画完揉掉丢开，把紧绷的劲儿顺着纸团散出去。",
+            "turn": 2,
+            "speaker_name": "小澄",
+            "speak": false,
+            "audio": "",
+            "rate": 24000
+          },
+          "xiaocheng": {
+            "seq": 2,
+            "kind": "turn",
+            "speaker": "xiaocheng",
+            "text": "我提个，找张白纸随便画点无意义的线条，画完揉掉丢开，把紧绷的劲儿顺着纸团散出去。",
+            "turn": 2,
+            "speaker_name": "小澄",
+            "speak": true,
+            "audio": "/v1/audio/2",
+            "rate": 24000
+          }
+        },
+        "demo": false,
+        "text_only": false,
+        "peers": {
+          "qiji": true,
+          "xiaocheng": true
+        },
+        "ready": {
+          "qiji": true,
+          "xiaocheng": true
+        }
+      }
+    },
+    {
+      "elapsed_s": 43.57,
+      "snapshot": {
+        "state": "summarizing",
+        "topic": "忙碌之后，怎样用十分钟、不花钱放松一下？你们各提一个可选办法，最后由主人选择。",
+        "transcript": [
+          {
+            "speaker": "藤田琴音",
+            "text": "那我提个，找个没人的地方瘫着，闭眼随便想点不用费脑子的开心事就行。"
+          },
+          {
+            "speaker": "小澄",
+            "text": "我提个，找张白纸随便画点无意义的线条，画完揉掉丢开，把紧绷的劲儿顺着纸团散出去。"
+          }
+        ],
+        "summary": "",
+        "error": "",
+        "pending": {},
+        "demo": false,
+        "text_only": false,
+        "peers": {
+          "qiji": true,
+          "xiaocheng": true
+        },
+        "ready": {
+          "qiji": true,
+          "xiaocheng": true
+        }
+      }
+    },
+    {
+      "elapsed_s": 44.57,
+      "snapshot": {
+        "state": "speaking",
+        "topic": "忙碌之后，怎样用十分钟、不花钱放松一下？你们各提一个可选办法，最后由主人选择。",
+        "transcript": [
+          {
+            "speaker": "藤田琴音",
+            "text": "那我提个，找个没人的地方瘫着，闭眼随便想点不用费脑子的开心事就行。"
+          },
+          {
+            "speaker": "小澄",
+            "text": "我提个，找张白纸随便画点无意义的线条，画完揉掉丢开，把紧绷的劲儿顺着纸团散出去。"
+          }
+        ],
+        "summary": "",
+        "error": "",
+        "pending": {
+          "qiji": {
+            "seq": 3,
+            "kind": "turn",
+            "speaker": "qiji",
+            "text": "诶，这俩都挺不错啊，制作人你选哪个？我觉得瘫着更省劲儿，不过画画好像也能发泄情绪。",
+            "turn": 3,
+            "speaker_name": "藤田琴音",
+            "speak": true,
+            "audio": "",
+            "rate": 24000
+          },
+          "xiaocheng": {
+            "seq": 3,
+            "kind": "turn",
+            "speaker": "qiji",
+            "text": "诶，这俩都挺不错啊，制作人你选哪个？我觉得瘫着更省劲儿，不过画画好像也能发泄情绪。",
+            "turn": 3,
+            "speaker_name": "藤田琴音",
+            "speak": false,
+            "audio": "",
+            "rate": 24000
+          }
+        },
+        "demo": false,
+        "text_only": false,
+        "peers": {
+          "qiji": true,
+          "xiaocheng": true
+        },
+        "ready": {
+          "qiji": true,
+          "xiaocheng": true
+        }
+      }
+    },
+    {
+      "elapsed_s": 53.96,
+      "snapshot": {
+        "state": "summarizing",
+        "topic": "忙碌之后，怎样用十分钟、不花钱放松一下？你们各提一个可选办法，最后由主人选择。",
+        "transcript": [
+          {
+            "speaker": "藤田琴音",
+            "text": "那我提个，找个没人的地方瘫着，闭眼随便想点不用费脑子的开心事就行。"
+          },
+          {
+            "speaker": "小澄",
+            "text": "我提个，找张白纸随便画点无意义的线条，画完揉掉丢开，把紧绷的劲儿顺着纸团散出去。"
+          },
+          {
+            "speaker": "藤田琴音",
+            "text": "诶，这俩都挺不错啊，制作人你选哪个？我觉得瘫着更省劲儿，不过画画好像也能发泄情绪。"
+          }
+        ],
+        "summary": "",
+        "error": "",
+        "pending": {},
+        "demo": false,
+        "text_only": false,
+        "peers": {
+          "qiji": true,
+          "xiaocheng": true
+        },
+        "ready": {
+          "qiji": true,
+          "xiaocheng": true
+        }
+      }
+    },
+    {
+      "elapsed_s": 59.03,
+      "snapshot": {
+        "state": "speaking",
+        "topic": "忙碌之后，怎样用十分钟、不花钱放松一下？你们各提一个可选办法，最后由主人选择。",
+        "transcript": [
+          {
+            "speaker": "藤田琴音",
+            "text": "那我提个，找个没人的地方瘫着，闭眼随便想点不用费脑子的开心事就行。"
+          },
+          {
+            "speaker": "小澄",
+            "text": "我提个，找张白纸随便画点无意义的线条，画完揉掉丢开，把紧绷的劲儿顺着纸团散出去。"
+          },
+          {
+            "speaker": "藤田琴音",
+            "text": "诶，这俩都挺不错啊，制作人你选哪个？我觉得瘫着更省劲儿，不过画画好像也能发泄情绪。"
+          }
+        ],
+        "summary": "",
+        "error": "",
+        "pending": {
+          "qiji": {
+            "seq": 4,
+            "kind": "turn",
+            "speaker": "xiaocheng",
+            "text": "要是选画画的话，画错也没关系哦，不用讲究好不好看，随便涂都可以的。",
+            "turn": 4,
+            "speaker_name": "小澄",
+            "speak": false,
+            "audio": "",
+            "rate": 24000
+          },
+          "xiaocheng": {
+            "seq": 4,
+            "kind": "turn",
+            "speaker": "xiaocheng",
+            "text": "要是选画画的话，画错也没关系哦，不用讲究好不好看，随便涂都可以的。",
+            "turn": 4,
+            "speaker_name": "小澄",
+            "speak": true,
+            "audio": "/v1/audio/4",
+            "rate": 24000
+          }
+        },
+        "demo": false,
+        "text_only": false,
+        "peers": {
+          "qiji": true,
+          "xiaocheng": true
+        },
+        "ready": {
+          "qiji": true,
+          "xiaocheng": true
+        }
+      }
+    },
+    {
+      "elapsed_s": 66.12,
+      "snapshot": {
+        "state": "summarizing",
+        "topic": "忙碌之后，怎样用十分钟、不花钱放松一下？你们各提一个可选办法，最后由主人选择。",
+        "transcript": [
+          {
+            "speaker": "藤田琴音",
+            "text": "那我提个，找个没人的地方瘫着，闭眼随便想点不用费脑子的开心事就行。"
+          },
+          {
+            "speaker": "小澄",
+            "text": "我提个，找张白纸随便画点无意义的线条，画完揉掉丢开，把紧绷的劲儿顺着纸团散出去。"
+          },
+          {
+            "speaker": "藤田琴音",
+            "text": "诶，这俩都挺不错啊，制作人你选哪个？我觉得瘫着更省劲儿，不过画画好像也能发泄情绪。"
+          },
+          {
+            "speaker": "小澄",
+            "text": "要是选画画的话，画错也没关系哦，不用讲究好不好看，随便涂都可以的。"
+          }
+        ],
+        "summary": "",
+        "error": "",
+        "pending": {},
+        "demo": false,
+        "text_only": false,
+        "peers": {
+          "qiji": true,
+          "xiaocheng": true
+        },
+        "ready": {
+          "qiji": true,
+          "xiaocheng": true
+        }
+      }
+    },
+    {
+      "elapsed_s": 67.14,
+      "snapshot": {
+        "state": "speaking",
+        "topic": "忙碌之后，怎样用十分钟、不花钱放松一下？你们各提一个可选办法，最后由主人选择。",
+        "transcript": [
+          {
+            "speaker": "藤田琴音",
+            "text": "那我提个，找个没人的地方瘫着，闭眼随便想点不用费脑子的开心事就行。"
+          },
+          {
+            "speaker": "小澄",
+            "text": "我提个，找张白纸随便画点无意义的线条，画完揉掉丢开，把紧绷的劲儿顺着纸团散出去。"
+          },
+          {
+            "speaker": "藤田琴音",
+            "text": "诶，这俩都挺不错啊，制作人你选哪个？我觉得瘫着更省劲儿，不过画画好像也能发泄情绪。"
+          },
+          {
+            "speaker": "小澄",
+            "text": "要是选画画的话，画错也没关系哦，不用讲究好不好看，随便涂都可以的。"
+          }
+        ],
+        "summary": "",
+        "error": "",
+        "pending": {
+          "qiji": {
+            "seq": 5,
+            "kind": "turn",
+            "speaker": "qiji",
+            "text": "那瘫着的话连笔和纸都不用准备，真的超省事儿的，制作人你快选嘛。",
+            "turn": 5,
+            "speaker_name": "藤田琴音",
+            "speak": true,
+            "audio": "",
+            "rate": 24000
+          },
+          "xiaocheng": {
+            "seq": 5,
+            "kind": "turn",
+            "speaker": "qiji",
+            "text": "那瘫着的话连笔和纸都不用准备，真的超省事儿的，制作人你快选嘛。",
+            "turn": 5,
+            "speaker_name": "藤田琴音",
+            "speak": false,
+            "audio": "",
+            "rate": 24000
+          }
+        },
+        "demo": false,
+        "text_only": false,
+        "peers": {
+          "qiji": true,
+          "xiaocheng": true
+        },
+        "ready": {
+          "qiji": true,
+          "xiaocheng": true
+        }
+      }
+    },
+    {
+      "elapsed_s": 75.25,
+      "snapshot": {
+        "state": "summarizing",
+        "topic": "忙碌之后，怎样用十分钟、不花钱放松一下？你们各提一个可选办法，最后由主人选择。",
+        "transcript": [
+          {
+            "speaker": "藤田琴音",
+            "text": "那我提个，找个没人的地方瘫着，闭眼随便想点不用费脑子的开心事就行。"
+          },
+          {
+            "speaker": "小澄",
+            "text": "我提个，找张白纸随便画点无意义的线条，画完揉掉丢开，把紧绷的劲儿顺着纸团散出去。"
+          },
+          {
+            "speaker": "藤田琴音",
+            "text": "诶，这俩都挺不错啊，制作人你选哪个？我觉得瘫着更省劲儿，不过画画好像也能发泄情绪。"
+          },
+          {
+            "speaker": "小澄",
+            "text": "要是选画画的话，画错也没关系哦，不用讲究好不好看，随便涂都可以的。"
+          },
+          {
+            "speaker": "藤田琴音",
+            "text": "那瘫着的话连笔和纸都不用准备，真的超省事儿的，制作人你快选嘛。"
+          }
+        ],
+        "summary": "",
+        "error": "",
+        "pending": {},
+        "demo": false,
+        "text_only": false,
+        "peers": {
+          "qiji": true,
+          "xiaocheng": true
+        },
+        "ready": {
+          "qiji": true,
+          "xiaocheng": true
+        }
+      }
+    },
+    {
+      "elapsed_s": 78.29,
+      "snapshot": {
+        "state": "speaking",
+        "topic": "忙碌之后，怎样用十分钟、不花钱放松一下？你们各提一个可选办法，最后由主人选择。",
+        "transcript": [
+          {
+            "speaker": "藤田琴音",
+            "text": "那我提个，找个没人的地方瘫着，闭眼随便想点不用费脑子的开心事就行。"
+          },
+          {
+            "speaker": "小澄",
+            "text": "我提个，找张白纸随便画点无意义的线条，画完揉掉丢开，把紧绷的劲儿顺着纸团散出去。"
+          },
+          {
+            "speaker": "藤田琴音",
+            "text": "诶，这俩都挺不错啊，制作人你选哪个？我觉得瘫着更省劲儿，不过画画好像也能发泄情绪。"
+          },
+          {
+            "speaker": "小澄",
+            "text": "要是选画画的话，画错也没关系哦，不用讲究好不好看，随便涂都可以的。"
+          },
+          {
+            "speaker": "藤田琴音",
+            "text": "那瘫着的话连笔和纸都不用准备，真的超省事儿的，制作人你快选嘛。"
+          }
+        ],
+        "summary": "",
+        "error": "",
+        "pending": {
+          "qiji": {
+            "seq": 6,
+            "kind": "turn",
+            "speaker": "xiaocheng",
+            "text": "其实瘫着的时候也能配合深呼吸，慢慢吐气的时候把压力都呼出去，会更放松哦。",
+            "turn": 6,
+            "speaker_name": "小澄",
+            "speak": false,
+            "audio": "",
+            "rate": 24000
+          },
+          "xiaocheng": {
+            "seq": 6,
+            "kind": "turn",
+            "speaker": "xiaocheng",
+            "text": "其实瘫着的时候也能配合深呼吸，慢慢吐气的时候把压力都呼出去，会更放松哦。",
+            "turn": 6,
+            "speaker_name": "小澄",
+            "speak": true,
+            "audio": "/v1/audio/6",
+            "rate": 24000
+          }
+        },
+        "demo": false,
+        "text_only": false,
+        "peers": {
+          "qiji": true,
+          "xiaocheng": true
+        },
+        "ready": {
+          "qiji": true,
+          "xiaocheng": true
+        }
+      }
+    },
+    {
+      "elapsed_s": 86.4,
+      "snapshot": {
+        "state": "generating",
+        "topic": "忙碌之后，怎样用十分钟、不花钱放松一下？你们各提一个可选办法，最后由主人选择。",
+        "transcript": [
+          {
+            "speaker": "藤田琴音",
+            "text": "那我提个，找个没人的地方瘫着，闭眼随便想点不用费脑子的开心事就行。"
+          },
+          {
+            "speaker": "小澄",
+            "text": "我提个，找张白纸随便画点无意义的线条，画完揉掉丢开，把紧绷的劲儿顺着纸团散出去。"
+          },
+          {
+            "speaker": "藤田琴音",
+            "text": "诶，这俩都挺不错啊，制作人你选哪个？我觉得瘫着更省劲儿，不过画画好像也能发泄情绪。"
+          },
+          {
+            "speaker": "小澄",
+            "text": "要是选画画的话，画错也没关系哦，不用讲究好不好看，随便涂都可以的。"
+          },
+          {
+            "speaker": "藤田琴音",
+            "text": "那瘫着的话连笔和纸都不用准备，真的超省事儿的，制作人你快选嘛。"
+          },
+          {
+            "speaker": "小澄",
+            "text": "其实瘫着的时候也能配合深呼吸，慢慢吐气的时候把压力都呼出去，会更放松哦。"
+          }
+        ],
+        "summary": "",
+        "error": "",
+        "pending": {},
+        "demo": false,
+        "text_only": false,
+        "peers": {
+          "qiji": true,
+          "xiaocheng": true
+        },
+        "ready": {
+          "qiji": true,
+          "xiaocheng": true
+        }
+      }
+    },
+    {
+      "elapsed_s": 87.41,
+      "snapshot": {
+        "state": "summarizing",
+        "topic": "忙碌之后，怎样用十分钟、不花钱放松一下？你们各提一个可选办法，最后由主人选择。",
+        "transcript": [
+          {
+            "speaker": "藤田琴音",
+            "text": "那我提个，找个没人的地方瘫着，闭眼随便想点不用费脑子的开心事就行。"
+          },
+          {
+            "speaker": "小澄",
+            "text": "我提个，找张白纸随便画点无意义的线条，画完揉掉丢开，把紧绷的劲儿顺着纸团散出去。"
+          },
+          {
+            "speaker": "藤田琴音",
+            "text": "诶，这俩都挺不错啊，制作人你选哪个？我觉得瘫着更省劲儿，不过画画好像也能发泄情绪。"
+          },
+          {
+            "speaker": "小澄",
+            "text": "要是选画画的话，画错也没关系哦，不用讲究好不好看，随便涂都可以的。"
+          },
+          {
+            "speaker": "藤田琴音",
+            "text": "那瘫着的话连笔和纸都不用准备，真的超省事儿的，制作人你快选嘛。"
+          },
+          {
+            "speaker": "小澄",
+            "text": "其实瘫着的时候也能配合深呼吸，慢慢吐气的时候把压力都呼出去，会更放松哦。"
+          }
+        ],
+        "summary": "",
+        "error": "",
+        "pending": {},
+        "demo": false,
+        "text_only": false,
+        "peers": {
+          "qiji": true,
+          "xiaocheng": true
+        },
+        "ready": {
+          "qiji": true,
+          "xiaocheng": true
+        }
+      }
+    },
+    {
+      "elapsed_s": 88.41,
+      "snapshot": {
+        "state": "speaking",
+        "topic": "忙碌之后，怎样用十分钟、不花钱放松一下？你们各提一个可选办法，最后由主人选择。",
+        "transcript": [
+          {
+            "speaker": "藤田琴音",
+            "text": "那我提个，找个没人的地方瘫着，闭眼随便想点不用费脑子的开心事就行。"
+          },
+          {
+            "speaker": "小澄",
+            "text": "我提个，找张白纸随便画点无意义的线条，画完揉掉丢开，把紧绷的劲儿顺着纸团散出去。"
+          },
+          {
+            "speaker": "藤田琴音",
+            "text": "诶，这俩都挺不错啊，制作人你选哪个？我觉得瘫着更省劲儿，不过画画好像也能发泄情绪。"
+          },
+          {
+            "speaker": "小澄",
+            "text": "要是选画画的话，画错也没关系哦，不用讲究好不好看，随便涂都可以的。"
+          },
+          {
+            "speaker": "藤田琴音",
+            "text": "那瘫着的话连笔和纸都不用准备，真的超省事儿的，制作人你快选嘛。"
+          },
+          {
+            "speaker": "小澄",
+            "text": "其实瘫着的时候也能配合深呼吸，慢慢吐气的时候把压力都呼出去，会更放松哦。"
+          }
+        ],
+        "summary": "",
+        "error": "",
+        "pending": {
+          "qiji": {
+            "seq": 7,
+            "kind": "summary",
+            "speaker": "qiji",
+            "text": "主人，本轮硬件伙伴聊了忙碌后十分钟不花钱的放松办法，藤田琴音提了找没人地方瘫着想开心事，小澄提了画无意义线条再揉掉。可选建议：选瘫着可配合深呼吸，选画画不用讲究美观。请问你要选哪个办法？",
+            "turn": 7,
+            "speaker_name": "藤田琴音",
+            "speak": true,
+            "audio": "",
+            "rate": 24000
+          },
+          "xiaocheng": {
+            "seq": 7,
+            "kind": "summary",
+            "speaker": "qiji",
+            "text": "主人，本轮硬件伙伴聊了忙碌后十分钟不花钱的放松办法，藤田琴音提了找没人地方瘫着想开心事，小澄提了画无意义线条再揉掉。可选建议：选瘫着可配合深呼吸，选画画不用讲究美观。请问你要选哪个办法？",
+            "turn": 7,
+            "speaker_name": "藤田琴音",
+            "speak": false,
+            "audio": "",
+            "rate": 24000
+          }
+        },
+        "demo": false,
+        "text_only": false,
+        "peers": {
+          "qiji": true,
+          "xiaocheng": true
+        },
+        "ready": {
+          "qiji": true,
+          "xiaocheng": true
+        }
+      }
+    },
+    {
+      "elapsed_s": 109.99,
+      "snapshot": {
+        "state": "complete",
+        "topic": "忙碌之后，怎样用十分钟、不花钱放松一下？你们各提一个可选办法，最后由主人选择。",
+        "transcript": [
+          {
+            "speaker": "藤田琴音",
+            "text": "那我提个，找个没人的地方瘫着，闭眼随便想点不用费脑子的开心事就行。"
+          },
+          {
+            "speaker": "小澄",
+            "text": "我提个，找张白纸随便画点无意义的线条，画完揉掉丢开，把紧绷的劲儿顺着纸团散出去。"
+          },
+          {
+            "speaker": "藤田琴音",
+            "text": "诶，这俩都挺不错啊，制作人你选哪个？我觉得瘫着更省劲儿，不过画画好像也能发泄情绪。"
+          },
+          {
+            "speaker": "小澄",
+            "text": "要是选画画的话，画错也没关系哦，不用讲究好不好看，随便涂都可以的。"
+          },
+          {
+            "speaker": "藤田琴音",
+            "text": "那瘫着的话连笔和纸都不用准备，真的超省事儿的，制作人你快选嘛。"
+          },
+          {
+            "speaker": "小澄",
+            "text": "其实瘫着的时候也能配合深呼吸，慢慢吐气的时候把压力都呼出去，会更放松哦。"
+          }
+        ],
+        "summary": "主人，本轮硬件伙伴聊了忙碌后十分钟不花钱的放松办法，藤田琴音提了找没人地方瘫着想开心事，小澄提了画无意义线条再揉掉。可选建议：选瘫着可配合深呼吸，选画画不用讲究美观。请问你要选哪个办法？",
+        "error": "",
+        "pending": {},
+        "demo": false,
+        "text_only": false,
+        "peers": {
+          "qiji": true,
+          "xiaocheng": true
+        },
+        "ready": {
+          "qiji": true,
+          "xiaocheng": true
+        }
+      }
+    }
+  ],
+  "final": {
+    "state": "complete",
+    "topic": "忙碌之后，怎样用十分钟、不花钱放松一下？你们各提一个可选办法，最后由主人选择。",
+    "transcript": [
+      {
+        "speaker": "藤田琴音",
+        "text": "那我提个，找个没人的地方瘫着，闭眼随便想点不用费脑子的开心事就行。"
+      },
+      {
+        "speaker": "小澄",
+        "text": "我提个，找张白纸随便画点无意义的线条，画完揉掉丢开，把紧绷的劲儿顺着纸团散出去。"
+      },
+      {
+        "speaker": "藤田琴音",
+        "text": "诶，这俩都挺不错啊，制作人你选哪个？我觉得瘫着更省劲儿，不过画画好像也能发泄情绪。"
+      },
+      {
+        "speaker": "小澄",
+        "text": "要是选画画的话，画错也没关系哦，不用讲究好不好看，随便涂都可以的。"
+      },
+      {
+        "speaker": "藤田琴音",
+        "text": "那瘫着的话连笔和纸都不用准备，真的超省事儿的，制作人你快选嘛。"
+      },
+      {
+        "speaker": "小澄",
+        "text": "其实瘫着的时候也能配合深呼吸，慢慢吐气的时候把压力都呼出去，会更放松哦。"
+      }
+    ],
+    "summary": "主人，本轮硬件伙伴聊了忙碌后十分钟不花钱的放松办法，藤田琴音提了找没人地方瘫着想开心事，小澄提了画无意义线条再揉掉。可选建议：选瘫着可配合深呼吸，选画画不用讲究美观。请问你要选哪个办法？",
+    "error": "",
+    "pending": {},
+    "demo": false,
+    "text_only": false,
+    "peers": {
+      "qiji": true,
+      "xiaocheng": true
+    },
+    "ready": {
+      "qiji": true,
+      "xiaocheng": true
+    }
+  },
+  "elapsed_s": 109.99
+}

@@ -1,0 +1,54 @@
+{
+  "Build": "UNCHANGED: user flashed Gemini before this test; host service updated only",
+  "Host tests": "PASS: 22 tests",
+  "Device tests": "PASS: real dual-device heartbeats, 6 alternating turns and summary acknowledged",
+  "elapsed_seconds": 109.99,
+  "playback_commands": [
+    {
+      "kind": "turn",
+      "speaker": "qiji"
+    },
+    {
+      "kind": "turn",
+      "speaker": "xiaocheng"
+    },
+    {
+      "kind": "turn",
+      "speaker": "qiji"
+    },
+    {
+      "kind": "turn",
+      "speaker": "xiaocheng"
+    },
+    {
+      "kind": "turn",
+      "speaker": "qiji"
+    },
+    {
+      "kind": "turn",
+      "speaker": "xiaocheng"
+    },
+    {
+      "kind": "summary",
+      "speaker": "qiji"
+    }
+  ],
+  "service_demo": false,
+  "service_text_only": false,
+  "both_online_after_test": true,
+  "remained_complete": true,
+  "gemini_busy": 0,
+  "gemini_recording": 0,
+  "user_observation": "No overlapping voices reported by user during testing",
+  "repair": "Xiaocheng duet now reuses the existing Qwen 3.1 solo speech backend; old qwen3-tts-flash request returned HTTP 400 Arrearage",
+  "Unverified": [
+    "screen readability and exact speaker loudness",
+    "physical stop/restart buttons during this test",
+    "microphone ASR during this test",
+    "cold boot, disconnected recovery and long-duration stress"
+  ],
+  "source_hashes": {
+    "tools\\duet\\server.py": "8c3a442c3196ce7306a24935df170191c96f63b173669565e40aa568ad8444f9",
+    "tools\\duet\\gemini_bridge.py": "dd0382c63c35a21d70f554ca0b78be855e8e1ecd4a2880fc8cbaf60077befe57"
+  }
+}

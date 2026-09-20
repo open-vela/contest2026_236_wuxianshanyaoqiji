@@ -1,0 +1,261 @@
+{
+  "version": 1,
+  "canvas": [
+    176,
+    272
+  ],
+  "source_sha256": "918f3cd09e9d3cc3cec39b1ad3a69e67c1e000ab61ec17661497c15237a9e2e5",
+  "method": "deterministic polygon separation, local skin inpainting, 3px seam overlap",
+  "limitations": "Small rotations with seam overlaps and local skin repairs; no Cubism mesh or full head turns.",
+  "repair_pixels": {
+    "legs": 165,
+    "body": 736,
+    "head": 271,
+    "braid_l": 134,
+    "braid_r": 149
+  },
+  "layers": [
+    {
+      "name": "legs",
+      "rect": [
+        55,
+        182,
+        64,
+        82
+      ],
+      "pivot": [
+        87,
+        183
+      ],
+      "bytes": 21004,
+      "sha256": "a5a67db480510053cd8a5adab55a1cb22b7457e3afc6655980c2411a238043cc"
+    },
+    {
+      "name": "braid_l",
+      "rect": [
+        20,
+        83,
+        46,
+        61
+      ],
+      "pivot": [
+        50,
+        89
+      ],
+      "bytes": 11236,
+      "sha256": "cd08406f8113061548e0500a21c77d5e005c27f17573bca73749167c755d35df"
+    },
+    {
+      "name": "braid_r",
+      "rect": [
+        109,
+        83,
+        47,
+        61
+      ],
+      "pivot": [
+        126,
+        89
+      ],
+      "bytes": 11480,
+      "sha256": "52376f9f34c666f9e5e1adead9f8a37fc60bb67bac970d8eda0459294936b5be"
+    },
+    {
+      "name": "body",
+      "rect": [
+        53,
+        89,
+        69,
+        99
+      ],
+      "pivot": [
+        87,
+        181
+      ],
+      "bytes": 27336,
+      "sha256": "3c86f093b9a2806b88137cf8c6e58ff4a987028b8257454812490810424bb2ab"
+    },
+    {
+      "name": "neck",
+      "rect": [
+        76,
+        90,
+        25,
+        17
+      ],
+      "pivot": [
+        87,
+        100
+      ],
+      "bytes": 1712,
+      "sha256": "904e3925e18b3288dbb653a3b75bf9b5eb74147999db7b81c63e6ce1a05ac580"
+    },
+    {
+      "name": "head",
+      "rect": [
+        36,
+        8,
+        104,
+        94
+      ],
+      "pivot": [
+        87,
+        97
+      ],
+      "bytes": 39116,
+      "sha256": "d72c19192bb92f2764139231c1ad1dd377a38955c0f0b8bea006af63666b3516"
+    },
+    {
+      "name": "eye_l",
+      "rect": [
+        56,
+        63,
+        26,
+        21
+      ],
+      "pivot": [
+        87,
+        97
+      ],
+      "bytes": 2196,
+      "sha256": "6e29e4525cffdfda3479572933aea70a9ddc47be152adae7279fffcd4e5e8b78"
+    },
+    {
+      "name": "eye_r",
+      "rect": [
+        95,
+        63,
+        25,
+        21
+      ],
+      "pivot": [
+        87,
+        97
+      ],
+      "bytes": 2112,
+      "sha256": "dd8f810364cfdc1e266fcf4e0128e9cdb3642145f1d318170bc41733007b820c"
+    },
+    {
+      "name": "brows",
+      "rect": [
+        64,
+        48,
+        53,
+        7
+      ],
+      "pivot": [
+        87,
+        97
+      ],
+      "bytes": 1496,
+      "sha256": "23a3613d0e4d1f265ea6fd4a82c2f5bf72a5f53009c7bdabbd1b31f8c2ccd274"
+    },
+    {
+      "name": "mouth_closed",
+      "rect": [
+        80,
+        83,
+        17,
+        7
+      ],
+      "pivot": [
+        87,
+        97
+      ],
+      "bytes": 488,
+      "sha256": "d85ecacb544717e4c19f177fe45cd45ebf6af296fa65f7799af1c15ad7a6c4f7"
+    },
+    {
+      "name": "bangs",
+      "rect": [
+        42,
+        19,
+        81,
+        52
+      ],
+      "pivot": [
+        87,
+        97
+      ],
+      "bytes": 16860,
+      "sha256": "a8bccd1f02da7c809a71a0d961ce5c2d77310407c2ca84032a841790e5c9cc87"
+    },
+    {
+      "name": "arms",
+      "rect": [
+        35,
+        115,
+        108,
+        75
+      ],
+      "pivot": [
+        87,
+        110
+      ],
+      "bytes": 32412,
+      "sha256": "636eb600ab8ed148a1f876af414123bf376f80f0b26b4e31525ed5ea417d9b67"
+    },
+    {
+      "name": "eye_closed_l",
+      "rect": [
+        56,
+        63,
+        26,
+        21
+      ],
+      "pivot": [
+        87,
+        97
+      ],
+      "bytes": 2196,
+      "sha256": "8ff1fb696df8be4c78e3788480eefc67315fbc8891057a627e57e496f12e1197"
+    },
+    {
+      "name": "eye_closed_r",
+      "rect": [
+        95,
+        63,
+        25,
+        21
+      ],
+      "pivot": [
+        87,
+        97
+      ],
+      "bytes": 2112,
+      "sha256": "b524d5a6e31ed7128e86c89a16c7f65fd9a099d2518faad9702234d81ddd58c8"
+    },
+    {
+      "name": "mouth_small",
+      "rect": [
+        80,
+        83,
+        17,
+        7
+      ],
+      "pivot": [
+        87,
+        97
+      ],
+      "bytes": 488,
+      "sha256": "2bb46ce751a0b5fa9f675597e64259a52bd6967beff0e65cdf465c95fa36c916"
+    },
+    {
+      "name": "mouth_large",
+      "rect": [
+        80,
+        83,
+        17,
+        7
+      ],
+      "pivot": [
+        87,
+        97
+      ],
+      "bytes": 488,
+      "sha256": "f2de245a854d761a5d57eb289a958cac38fb70c94777008a9a7d4f304209e1b8"
+    }
+  ],
+  "total_bin_bytes": 172732,
+  "format": "LVGL 9 ARGB8888 (BGRA bytes), cropped per layer"
+}

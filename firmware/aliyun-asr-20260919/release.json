@@ -1,0 +1,14 @@
+{
+  "image": "qiji-chat-aliyun.img",
+  "sha256": "ab459ca27fff37ebe0514dbbfa8fbe2a2c89bb0a0a5eb5fc91fc679ce3580314",
+  "bytes": 27419648,
+  "asr": "paraformer-realtime-v2",
+  "llm": "doubao-seed-character-260628",
+  "host_cloud_lifecycle_verified": true,
+  "host_firmware_c_backend_cloud_verified": true,
+  "hardware_verified": false,
+  "microphone_verified": false,
+  "tts_verified": false,
+  "credentials_embedded": false,
+  "build_environment": "WSL2 Ubuntu 24.04; outside official supported environment"
+}

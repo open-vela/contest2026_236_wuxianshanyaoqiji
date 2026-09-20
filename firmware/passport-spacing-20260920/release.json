@@ -1,0 +1,15 @@
+{
+  "version": "xiaocheng-0.3.1-spacing",
+  "sha256": "a24d732f5a90ffda4b5f8e1d162158298a32b9bfbe152a26a1f2357ae5d76d60",
+  "app_elf_sha256": "dc6b7f420709a2646386a3ddb4fe2056bc6ebe5be9d30f2ff86932a6d8803c2d",
+  "app_image_sha256": "d25dcdce704d156a89e24f50f1be61be377872a62baf0aee7cd8a216bcc2fac5",
+  "app_offset": "0x10000",
+  "Build": "PASS: full ESP-IDF 5.5.3 validation gate",
+  "Host tests": "PASS: full gate and native LVGL rendering with 20976 CJK glyph checks",
+  "Device tests": "NOT RUN for spacing revision; previous voice revision user-confirmed",
+  "partition_matches_installed_voice": true,
+  "change": "Dialogue line advance 31 -> 20 px and matching scroll distance",
+  "Unverified": [
+    "physical compact text rendering"
+  ]
+}

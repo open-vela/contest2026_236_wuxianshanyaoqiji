@@ -1,15 +1,23 @@
 # Gemini-S1 2.8 寸 SPI 屏：固定构建与打包流程
 
-## 当前语音候选版（2026-09-19 20:26:48）
+## 当前双硬件版（2026-09-20）
 
-当前入口是 `tools/prepare_qiji_persona.py`，成果目录为 `firmware/capture-idle-20260919`。下方“对话包”一节保留的是最初亮屏版本的历史流程，不能替代当前累计准备步骤。
+当前 Gemini 源码版本为 v0.4.0，包含分层角色、ENTER、阿里语音和局域网联动。当前累计资源准备入口为 `tools/prepare_layered_ui.py`，它串联 sprite、portrait、语音等准备步骤。固定版本官方树首次运行 `prepare_official_chat.py` 与 `packages/ai_agent/fix_gemini_s1.sh` 后，运行 `python3 /path/to/contest/tools/prepare_layered_ui.py "$PWD"`，再按下文执行官方 build/pack；不要把旧的冻结镜像当作当前代码构建结果。
+
+当前应用源码随准备脚本复制，包含 qiji_duet；16 个分层和 8 个特殊动作资源按 manifest 校验。双机编译记录见 `firmware/duet-20260920`，后续 Passport 源码见 `app/passport_companion`。这些目录在 Git 中仅保存构建元数据、配置与哈希，IMG/ELF 和本地调试包不提交，SHA256SUMS 中未入仓的文件属于本地完整归档。历史 source 子目录只属于对应旧版本，不是当前源码。
+
+系统关系、电脑服务与凭据配置见 [架构与运行](contest/架构与运行.md) 和 [Passport 指南](passport-companion.zh_CN.md)。当前设备成功证据与未解决问题见 [验收清单](contest/验收与问题清单.md)。以下保留历史版本构建说明。
+
+## 当前图标与统一间距候选版（v0.3.1）
+
+当前入口是 `tools/prepare_sprite_ui.py`，成果目录为 `firmware/icon-ui-20260920`。它继承竖屏、实体 ENTER、时间/版本及音频修复，包含 8 种图片动作、播放期间文字滚动，右下角采用无文字麦克风/停止图标，卡片与文本框使用统一间距和同心圆角。先准备齐 assets/kotone-v1/bin 下的全部图片，缺图时不能发布。下方“对话包”一节保留的是最初亮屏版本的历史流程，不能替代当前累计准备步骤。
 
 完成下方固定版本源码同步后，在干净官方树根目录依次运行：
 
 ```sh
 python3 /path/to/contest/tools/prepare_official_chat.py "$PWD"
 bash packages/ai_agent/fix_gemini_s1.sh
-python3 /path/to/contest/tools/prepare_qiji_persona.py "$PWD"
+python3 /path/to/contest/tools/prepare_sprite_ui.py "$PWD"
 ./build.sh vendor/allwinnertech/boards/r528/r528s3-gemini-s1/configs/qiji_chat/ -j4
 source build/envsetup.sh
 cd vendor/allwinnertech/lichee
@@ -20,7 +28,7 @@ pack
 
 官方音频补丁仅在干净树应用一次。准备脚本已串联累计修复，不要再叠加冻结目录内的累计 patch。最终镜像仍须运行下方验证器核验。通用镜像不预置 Wi-Fi 密码或云端 Key；烧录后通过配置工具设置。
 
-当前候选已完成构建、主机回归与镜像校验，最新版板端多轮语音尚未通过验收。预提交不代表最终参赛放行。
+当前检查与验收边界见 [图标与间距说明](icon-ui-20260920.md)。最新版板端图像、滚动、ENTER 操作和多轮语音尚待验收。预提交不代表最终参赛放行。
 
 ## 最初亮屏版本记录
 

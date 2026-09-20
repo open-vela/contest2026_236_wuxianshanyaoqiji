@@ -1,0 +1,15 @@
+{
+  "image": "qiji-chat-wifi-doubao.img",
+  "sha256": "4a20af9a468db4063dcfde3ba107e586abf7d1b7c1aeb048c2d5cde880ee96f1",
+  "bytes": 27411456,
+  "new_firmware_hardware_verified": false,
+  "existing_firmware_live_tests": {
+    "wifi": "2F / 192.168.5.158",
+    "default_model": "doubao-seed-character-260628",
+    "character_short_request_ms": 894,
+    "turbo_short_request_ms": 3012,
+    "chinese_reply": "你好呀，最近过得怎么样？"
+  },
+  "voice": "not verified",
+  "credentials_included": false
+}

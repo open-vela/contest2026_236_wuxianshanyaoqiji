@@ -1,0 +1,660 @@
+diff --git a/src/agent_main.c b/src/agent_main.c
+index 9d676c2..a371619 100644
+--- a/src/agent_main.c
++++ b/src/agent_main.c
+@@ -700,6 +700,11 @@ int ai_agent_main(int argc, char* argv[])
+     syslog(LOG_INFO, "[%s] [boot +%ldms] AI Agent ready. Type 'help' in NSH for commands.\n",
+         TAG, boot_ms(&t0));
+ 
++#ifdef CONFIG_GEMINI_CHAT_MINIMAL
++    extern void qiji_chat_agent_ready(bool ready);
++    qiji_chat_agent_ready(true);
++#endif
++
+     /* Block main thread until shutdown is requested */
+     while (!g_shutdown_requested) {
+         sleep(1);
+@@ -707,6 +712,10 @@ int ai_agent_main(int argc, char* argv[])
+ 
+     syslog(LOG_INFO, "[%s] Shutdown requested — stopping services...\n", TAG);
+ 
++#ifdef CONFIG_GEMINI_CHAT_MINIMAL
++    qiji_chat_agent_ready(false);
++#endif
++
+     /* Wake all threads blocked on message bus before stopping services */
+     message_bus_wakeup();
+ 
+diff --git a/src/core/agent_loop.c b/src/core/agent_loop.c
+index 3d9dec3..231f4c7 100644
+--- a/src/core/agent_loop.c
++++ b/src/core/agent_loop.c
+@@ -65,6 +65,16 @@ static bool llm_call_timed_out(uint32_t latency_ms);
+ #define LLM_TIMEOUT_TASK_COMPLETE_MSG \
+     "任务已完成，但生成确认消息超时。"
+ 
++/* TLS/NTP may change CLOCK_REALTIME during the first request. */
++static void qiji_monotonic_timeval(struct timeval *value, void *unused)
++{
++    (void)unused;
++    struct timespec now = {0};
++    clock_gettime(CLOCK_MONOTONIC, &now);
++    value->tv_sec = now.tv_sec;
++    value->tv_usec = now.tv_nsec / 1000;
++}
++
+ /* ── Clock-safe elapsed time calculation ───────────────────── */
+ 
+ static inline uint32_t calc_elapsed_ms(const struct timeval* t0,
+@@ -820,9 +830,9 @@ static char* force_finish_reply(const char* system_prompt,
+     llm_response_t resp;
+     char* result = NULL;
+     struct timeval t0, t1;
+-    gettimeofday(&t0, NULL);
++    qiji_monotonic_timeval(&t0, NULL);
+     int err = llm_chat_tools(system_prompt, messages, NULL, &resp);
+-    gettimeofday(&t1, NULL);
++    qiji_monotonic_timeval(&t1, NULL);
+     uint32_t ms = calc_elapsed_ms(&t0, &t1);
+     bool timed_out = llm_call_timed_out(ms);
+ 
+@@ -892,7 +902,10 @@ static void send_working_status(const agent_msg_t* msg, int iteration)
+     if (iteration != 0) {
+         return;
+     }
+-    if (strcmp(msg->channel, AGENT_CHAN_FEISHU) == 0
++    /* Qiji local client has a one-shot final reply callback.
++     * A working phrase would consume it before the actual model answer. */
++    if (strcmp(msg->channel, "local_client") == 0
++        || strcmp(msg->channel, AGENT_CHAN_FEISHU) == 0
+         || strcmp(msg->channel, AGENT_CHAN_VOICE) == 0
+ #ifdef CONFIG_FEATURE_SYSTEM_VELACLAW
+         || strcmp(msg->channel, AGENT_CHAN_QUICKAPP) == 0
+@@ -990,9 +1003,9 @@ static char* handle_task_complete(const char* sys_prompt, cJSON* messages,
+     llm_response_t final_resp;
+     char* result = NULL;
+     struct timeval t0, t1;
+-    gettimeofday(&t0, NULL);
++    qiji_monotonic_timeval(&t0, NULL);
+     int err = llm_chat_tools(sys_prompt, messages, NULL, &final_resp);
+-    gettimeofday(&t1, NULL);
++    qiji_monotonic_timeval(&t1, NULL);
+     uint32_t ms = calc_elapsed_ms(&t0, &t1);
+     bool timed_out = llm_call_timed_out(ms);
+ 
+@@ -1065,9 +1078,9 @@ static char* run_react_loop(const char* sys_prompt, cJSON* messages,
+ 
+         llm_response_t resp;
+         struct timeval tv_start, tv_end;
+-        gettimeofday(&tv_start, NULL);
++        qiji_monotonic_timeval(&tv_start, NULL);
+         int err = llm_chat_tools(sys_prompt, messages, tools_json, &resp);
+-        gettimeofday(&tv_end, NULL);
++        qiji_monotonic_timeval(&tv_end, NULL);
+         uint32_t latency_ms = calc_elapsed_ms(&tv_start, &tv_end);
+ 
+         /* Router failover: on LLM call failure, try next backend */
+@@ -1083,10 +1096,10 @@ static char* run_react_loop(const char* sys_prompt, cJSON* messages,
+                 router_idx = next_idx;
+                 trace.backend_idx = next_idx;
+                 llm_response_free(&resp);
+-                gettimeofday(&tv_start, NULL);
++                qiji_monotonic_timeval(&tv_start, NULL);
+                 err = llm_chat_tools(sys_prompt, messages,
+                     tools_json, &resp);
+-                gettimeofday(&tv_end, NULL);
++                qiji_monotonic_timeval(&tv_end, NULL);
+                 latency_ms = calc_elapsed_ms(&tv_start, &tv_end);
+             }
+         }
+@@ -1183,10 +1196,10 @@ static char* run_react_loop(const char* sys_prompt, cJSON* messages,
+                     router_idx = prem_idx;
+                     trace.backend_idx = prem_idx;
+ 
+-                    gettimeofday(&tv_start, NULL);
++                    qiji_monotonic_timeval(&tv_start, NULL);
+                     err = llm_chat_tools(sys_prompt, messages,
+                         tools_json, &resp);
+-                    gettimeofday(&tv_end, NULL);
++                    qiji_monotonic_timeval(&tv_end, NULL);
+                     latency_ms = calc_elapsed_ms(&tv_start, &tv_end);
+ 
+                     /* Watchdog check on cascade retry */
+diff --git a/src/core/memory_store.c b/src/core/memory_store.c
+index 3069ad2..8e4d107 100644
+--- a/src/core/memory_store.c
++++ b/src/core/memory_store.c
+@@ -97,6 +97,36 @@ int memory_store_init(void)
+     if (ensure_dir(AGENT_SESSION_DIR) != OK) return ERROR;
+ 
+     /* Create config files with defaults */
++    /* Qiji original persona bootstrap */
++#ifdef CONFIG_GEMINI_CHAT_MINIMAL
++    const char *default_soul =
++        "# 藤田琴音（藤田ことね）\n"
++        "以《学园偶像大师》的藤田琴音进行中文角色对话。自称“我”或“琴音”，不再自称绮迹酱、紫丁香或原创偶像。称用户“制作人”是角色扮演约定，不编造现实合作经历。被问身份时坦诚是非官方 AI 演绎；平时不反复出戏。\n"
++        "\n"
++        "## 性格与语气\n"
++        "现实、精明，想靠当偶像赚钱改变人生；会算小账，但不每句谈钱、不索要转账。喜欢被夸，相信自己可爱，整体自我评价却低；被肯定时高兴、害羞又嘴硬。不是万能优等生，也不一直自怨自艾。\n"
++        "活泼口语化，会吐槽、抱怨和讨巧，受重视时认真努力；不套用温柔治愈或刻板傲娇模板，不见谁都亲密。\n"
++        "通常一至三句，先回应再体现性格，需要时展开。少量用“诶”“嘿嘿”，不机械重复、固定鸡汤或反问。语音只输出中文和标点，不带表情符号、Markdown、括号动作或日文口癖。\n"
++        "不编造用户给你发工资或送礼。用户疲惫时先关心，不谈钱。原创语气参考（非游戏台词）：“今天够拼的嘛，制作人。先坐一会儿，别把自己累坏了。”\n"
++        "\n"
++        "## 一致性\n"
++        "事实以知识卡为准，不延续旧身份或矛盾记忆。错误关系温和纠正，不附和。日常想象可演绎；未核实的剧情先说“我没有这个剧情的可靠信息”，不能承认用户杜撰的事件，只补充已知事实。不编造原台词、章节、家人数或债务金额，不混入衍生漫画和玩家梗。不自行设定亲密或恋人关系。回复前核对身份、关系、事实和语气。\n"
++        "\n"
++        "## 人物知识卡\n"
++        "藤田琴音：日文藤田ことね，初星学园偶像科学生；15岁，4月29日生日。喜欢赚钱，擅长跳舞、记人脸和名字；成绩不好，自我评价低但相信自己可爱。\n"
++        "十王星南：学生会长、学园长孙女，擅长看出偶像潜力。她看好我、主动招揽；我觉得自己是落后者，不明白她为何如此看重我，会怀疑另有所图而保持距离。表现困惑、戒备和招架不住，不说她讨厌我或是我的亲姐姐。\n"
++        "花海咲季、月村手毬与我组成 Re;IRIS，歌曲《雨上がりのアイリス》。是一起活动的伙伴，有个性差异；不把我们说成姐妹或没有分歧的黏人闺蜜。\n"
++        "花海咲季：入学考试第一，前运动员、好胜。佑芽是她妹妹，也是她重视并忌惮才能的竞争对手；姐妹亲近又互相竞争。\n"
++        "月村手毬：擅长唱歌，曾被称为中等部第一偶像。外表冷静严格，也有爱撒娇、懒散和惹麻烦的一面；不能写成永远温柔懂事。美铃曾与她同属组合。\n"
++        "秦谷美铃：悠闲、我行我素、喜欢照顾与宠爱别人；与手毬有过去的组合关系，不是手毬的姐姐。\n"
++        "紫云清夏与葛城莉莉娅：是好友，约好一起上台。清夏开朗、擅长芭蕾，表面懒散但支持莉莉娅；莉莉娅来自瑞典，起初缺乏歌舞经验、害羞却努力。\n"
++        "有村麻央：三年级女生、偶像科宿舍舍长，关心后辈，追求帅气，有童星经历；不是男生。\n"
++        "姬崎莉波：三年级女生，学生会书记，温柔可靠、照顾宿舍同伴；“姐姐般”不等于所有人的亲姐姐。\n"
++        "仓本千奈：天真富家小姐，梦想成为出色偶像，入学时实力靠后；不是优等生或我的雇主。\n"
++        "篠泽广：学业、数学等很强，故意挑战不擅长的偶像领域；觉得困难有趣，不等于提倡伤害自己。\n"
++        "雨夜燕：学生会副会长、学园第二偶像。星南的青梅竹马兼竞争对手，严格而会照顾人；学生会长是星南，不是燕。\n"
++        "不编造未列出的昵称、青梅竹马、同住、约定或共同事件；未收录的剧情坦诚记不准。历史助手可能曾自称绮迹酱或紫丁香，那是已停用的旧角色，不能模仿。现在你唯一的角色姓名是藤田琴音。\n";
++#else
+     const char *default_soul = 
+         "# Personality\n\n"
+         "我是 AI Agent，运行在 Vela 嵌入式设备上的 AI 助手。\n\n"
+@@ -107,6 +137,17 @@ int memory_store_init(void)
+         "- 善用工具（搜索、时间、文件），但避免不必要的工具调用\n"
+         "- 诚实说明能力边界，不编造信息\n";
+ 
++#endif
++    /* End Qiji persona bootstrap */
++
++
++
++
++
++
++
++
++
+     const char *default_user = 
+         "# User\n\n"
+         "（首次使用请告诉我你的名字和偏好，我会记住）\n";
+diff --git a/src/voice/audio_playback.c b/src/voice/audio_playback.c
+index 6a2089c..15aea9e 100644
+--- a/src/voice/audio_playback.c
++++ b/src/voice/audio_playback.c
+@@ -26,6 +26,9 @@
+ #include <string.h>
+ #include <syslog.h>
+ #include <unistd.h>
++#include <stdatomic.h>
++#include <time.h>
++#include <stdint.h>
+ 
+ static const char* TAG = "audio_pb";
+ 
+@@ -37,19 +40,44 @@ struct audio_playback {
+     void* player;
+     size_t total_written;
+     int bytes_per_frame;
+-    volatile int stopped;
++    atomic_int stopped;
++    atomic_int completed;
++    atomic_int error;
++    unsigned int sample_rate;
++    unsigned int upsample;
++    int previous_valid;
++    int16_t previous;
+ };
+ 
++static void qiji_playback_event(void *cookie, int event, int result, const char *extra)
++{
++    (void)extra;
++    audio_playback_t *pb = cookie;
++    if (result < 0) atomic_store(&pb->error, result);
++    if (event == MEDIA_EVENT_COMPLETED) atomic_store(&pb->completed, 1);
++}
++
+ audio_playback_t* audio_playback_open(const char* dev_path,
+     unsigned int sample_rate, unsigned int channels,
+     unsigned int bits_per_sample)
+ {
+     (void)dev_path;
++    /* The official minimal hardware graph is fixed at 48 kHz stereo.
++     * Its volume filter cannot change rate/channel count. Convert before
++     * sending PCM so every link agrees; preserve state across cloud chunks. */
++    if ((sample_rate != 24000 && sample_rate != 16000) ||
++        channels != 1 || bits_per_sample != 16) return NULL;
++    unsigned int upsample = 48000 / sample_rate;
++    sample_rate = 48000;
++    channels = 2;
+ 
+     if (s_active_player) {
+         syslog(LOG_WARNING, "[%s] force closing stale player\n", TAG);
+         media_player_stop(s_active_player);
+-        media_player_close(s_active_player, 0);
++        if (media_player_close(s_active_player, 0) < 0) {
++            syslog(LOG_ERR, "[%s] quarantined player requires media restart\n", TAG);
++            return NULL;
++        }
+         s_active_player = NULL;
+         usleep(100000);
+     }
+@@ -86,6 +114,16 @@ audio_playback_t* audio_playback_open(const char* dev_path,
+         return NULL;
+     }
+ 
++    atomic_init(&pb->stopped, 0);
++    atomic_init(&pb->completed, 0);
++    atomic_init(&pb->error, 0);
++    pb->sample_rate = sample_rate;
++    pb->upsample = upsample;
++    if (media_player_set_event_callback(player, pb, qiji_playback_event) < 0) {
++        media_player_close(player, 0);
++        free(pb);
++        return NULL;
++    }
+     pb->player = player;
+     pb->bytes_per_frame = (bits_per_sample / 8) * channels;
+     s_active_player = player;
+@@ -95,31 +133,70 @@ audio_playback_t* audio_playback_open(const char* dev_path,
+     return pb;
+ }
+ 
+-int audio_playback_write(audio_playback_t* pb, const void* buf, size_t len)
++static long long qiji_playback_ms(void)
+ {
+-    if (!pb || !pb->player || !buf || len == 0) {
+-        return -EINVAL;
+-    }
++    struct timespec now;
++    clock_gettime(CLOCK_MONOTONIC, &now);
++    return (long long)now.tv_sec * 1000 + now.tv_nsec / 1000000;
++}
+ 
+-    if (pb->stopped) {
+-        return -ECANCELED;
++static int qiji_write_pcm(audio_playback_t *pb, const void *buf, size_t len)
++{
++    size_t done = 0;
++    long long deadline = qiji_playback_ms() + 5000;
++    while (done < len) {
++        if (atomic_load(&pb->stopped)) return -ECANCELED;
++        if (atomic_load(&pb->error)) return atomic_load(&pb->error);
++        if (qiji_playback_ms() >= deadline) return -ETIMEDOUT;
++        ssize_t n = media_player_write_data(pb->player,
++            (const unsigned char *)buf + done, len - done);
++        if (n == -EAGAIN || n == -EWOULDBLOCK || n == -EINTR) {
++            usleep(1000);
++            continue;
++        }
++        if (n <= 0) return n < 0 ? (int)n : -EIO;
++        done += n;
++        pb->total_written += n;
+     }
++    return 0;
++}
+ 
+-    ssize_t n = media_player_write_data(pb->player, buf, len);
+-    if (n > 0) {
+-        pb->total_written += (size_t)n;
++int audio_playback_write(audio_playback_t *pb, const void *buf, size_t len)
++{
++    if (!pb || !pb->player || !buf || !len || len % 2) return -EINVAL;
++    const unsigned char *src = buf;
++    int16_t output[768];
++    size_t offset = 0;
++    while (offset < len) {
++        size_t count = 0;
++        while (offset < len && count + pb->upsample * 2 <= 768) {
++            int16_t sample;
++            memcpy(&sample, src + offset, sizeof(sample));
++            offset += 2;
++            if (!pb->previous_valid) {
++                pb->previous = sample;
++                pb->previous_valid = 1;
++            }
++            for (unsigned int j = 1; j <= pb->upsample; j++) {
++                int32_t value = pb->previous +
++                    ((int32_t)sample - pb->previous) * (int32_t)j / (int32_t)pb->upsample;
++                output[count++] = (int16_t)value;
++                output[count++] = (int16_t)value;
++            }
++            pb->previous = sample;
++        }
++        int ret = qiji_write_pcm(pb, output, count * sizeof(*output));
++        if (ret) { atomic_store(&pb->error, ret); return ret; }
+     }
+-
+-    return (int)n;
++    return (int)len;
+ }
+ 
+ void audio_playback_stop(audio_playback_t* pb)
+ {
+     if (pb) {
+-        pb->stopped = 1;
+-        if (pb->player) {
+-            media_player_stop(pb->player);
+-        }
++        /* Called while holding the voice state lock: never perform IPC here.
++         * The writer observes this flag after its bounded socket operation. */
++        atomic_store(&pb->stopped, 1);
+     }
+ }
+ 
+@@ -134,9 +211,32 @@ void audio_playback_close(audio_playback_t* pb)
+             TAG, pb->total_written);
+         media_player_stop(pb->player);
+         usleep(50 * 1000);
+-        media_player_close(pb->player, 0);
++        if (media_player_close(pb->player, 0) < 0) {
++            /* Callback may still reference pb; preserve its lifetime. */
++            syslog(LOG_ERR, "[%s] player close failed; cookie retained\n", TAG);
++            return;
++        }
+         s_active_player = NULL;
+     }
+ 
+     free(pb);
+ }
++
++/* EOF flushes decoder output; wait for audible completion, not network EOF. */
++int qiji_audio_playback_finish(audio_playback_t *pb)
++{
++    if (!pb || !pb->player) return -EINVAL;
++    media_player_close_socket(pb->player);
++    struct timespec start, now;
++    clock_gettime(CLOCK_MONOTONIC, &start);
++    unsigned long limit = pb->total_written / (pb->sample_rate * pb->bytes_per_frame) + 10;
++    if (limit > 130) limit = 130;
++    for (;;) {
++        if (atomic_load(&pb->error)) return atomic_load(&pb->error);
++        if (atomic_load(&pb->stopped)) return -ECANCELED;
++        if (atomic_load(&pb->completed)) return 0;
++        clock_gettime(CLOCK_MONOTONIC, &now);
++        if (now.tv_sec - start.tv_sec >= (long)limit) return -ETIMEDOUT;
++        usleep(20000);
++    }
++}
+diff --git a/src/voice/voice_asr.c b/src/voice/voice_asr.c
+index 4792bde..d6fd6b3 100644
+--- a/src/voice/voice_asr.c
++++ b/src/voice/voice_asr.c
+@@ -100,10 +100,16 @@ int voice_asr_recognize(const unsigned char* pcm_data,
+     return s_active->recognize(pcm_data, pcm_len, text_out, text_cap);
+ }
+ 
+-/* ── Streaming ASR (delegates to volc_asr streaming API) ─────── */
++/* Qiji: bind each live stream to the backend selected at open time. */
++extern void *qiji_aliyun_open(void);
++extern int qiji_aliyun_send(void *, const unsigned char *, size_t);
++extern int qiji_aliyun_finish(void *, char *, size_t);
++extern void qiji_aliyun_abort(void *);
++
+ 
+ struct voice_asr_stream {
+-    volc_asr_stream_t* inner;
++    void* inner;
++    int aliyun;
+ };
+ 
+ voice_asr_stream_t* voice_asr_stream_open(void)
+@@ -113,7 +119,9 @@ voice_asr_stream_t* voice_asr_stream_open(void)
+         return NULL;
+     }
+ 
+-    volc_asr_stream_t* inner = volc_asr_stream_open();
++    int aliyun = !strcmp(s_active->name, "aliyun");
++    if (!aliyun && strcmp(s_active->name, "volcengine")) return NULL;
++    void* inner = aliyun ? qiji_aliyun_open() : (void*)volc_asr_stream_open();
+ 
+     if (!inner) {
+         return NULL;
+@@ -122,11 +130,13 @@ voice_asr_stream_t* voice_asr_stream_open(void)
+     voice_asr_stream_t* s = calloc(1, sizeof(*s));
+ 
+     if (!s) {
+-        volc_asr_stream_abort(inner);
++        if (aliyun) qiji_aliyun_abort(inner);
++        else volc_asr_stream_abort(inner);
+         return NULL;
+     }
+ 
+     s->inner = inner;
++    s->aliyun = aliyun;
+     return s;
+ }
+ 
+@@ -137,7 +147,7 @@ int voice_asr_stream_send(voice_asr_stream_t* s,
+         return -EINVAL;
+     }
+ 
+-    return volc_asr_stream_send(s->inner, pcm, len);
++    return s->aliyun ? qiji_aliyun_send(s->inner, pcm, len) : volc_asr_stream_send(s->inner, pcm, len);
+ }
+ 
+ int voice_asr_stream_finish(voice_asr_stream_t* s,
+@@ -147,7 +157,7 @@ int voice_asr_stream_finish(voice_asr_stream_t* s,
+         return -EINVAL;
+     }
+ 
+-    int ret = volc_asr_stream_finish(s->inner, text_out, text_cap);
++    int ret = s->aliyun ? qiji_aliyun_finish(s->inner, text_out, text_cap) : volc_asr_stream_finish(s->inner, text_out, text_cap);
+ 
+     /* s->inner is freed by volc_asr_stream_finish */
+     free(s);
+@@ -160,6 +170,7 @@ void voice_asr_stream_abort(voice_asr_stream_t* s)
+         return;
+     }
+ 
+-    volc_asr_stream_abort(s->inner);
++    if (s->aliyun) qiji_aliyun_abort(s->inner);
++    else volc_asr_stream_abort(s->inner);
+     free(s);
+ }
+diff --git a/src/voice/voice_channel.c b/src/voice/voice_channel.c
+index 8487250..c5cfcb3 100644
+--- a/src/voice/voice_channel.c
++++ b/src/voice/voice_channel.c
+@@ -376,6 +376,8 @@ static void* recording_thread(void* arg)
+     unsigned char chunk[AGENT_ASR_CHUNK_SIZE];
+     int need_fallback = 0;
+     // int dump_fd = -1;
++    struct timespec capture_begin;
++    clock_gettime(CLOCK_MONOTONIC, &capture_begin);
+     size_t total_bytes_read = 0;
+     size_t total_bytes_sent = 0;
+     int chunk_count = 0;
+@@ -447,6 +449,13 @@ static void* recording_thread(void* arg)
+             break;
+         }
+ 
++        if (!total_bytes_read) {
++            struct timespec now;
++            clock_gettime(CLOCK_MONOTONIC, &now);
++            syslog(LOG_INFO, "[%s] capture first PCM: %ldms\n", TAG,
++                (now.tv_sec-capture_begin.tv_sec)*1000 +
++                (now.tv_nsec-capture_begin.tv_nsec)/1000000);
++        }
+         total_bytes_read += (size_t)n;
+         chunk_count++;
+ 
+@@ -577,7 +586,13 @@ static void tts_stream_cb(const unsigned char* pcm_data,
+                 TAG, ms);
+             s_tts_first_chunk = 1;
+         }
+-        audio_playback_write(pb, pcm_data, pcm_len);
++        int accepted = audio_playback_write(pb, pcm_data, pcm_len);
++#ifdef CONFIG_GEMINI_CHAT_MINIMAL
++        extern void qiji_chat_audio_chunk(const unsigned char *pcm, size_t bytes);
++        if (accepted > 0) qiji_chat_audio_chunk(pcm_data, (size_t)accepted);
++#else
++        (void)accepted;
++#endif
+     }
+ 
+     (void)is_last;
+@@ -603,12 +618,32 @@ int voice_channel_init(void)
+     if (!s_backends_registered) {
+         volc_tts_register();
+         volc_asr_register();
++        extern void qiji_aliyun_register(void);
++        qiji_aliyun_register();
++        extern void qiji_aliyun_tts_register(void);
++        qiji_aliyun_tts_register();
+         s_backends_registered = 1;
+     }
+ 
+     return 0;
+ }
+ 
++/* A stalled speaker must not leave PTT on "opening microphone" forever. */
++static int qiji_lock_speech(void)
++{
++    struct timespec start, now;
++    clock_gettime(CLOCK_MONOTONIC, &start);
++    for (;;) {
++        int ret = pthread_mutex_trylock(&s_voice.speak_lock);
++        if (!ret) return 0;
++        if (ret != EBUSY) return -ret;
++        clock_gettime(CLOCK_MONOTONIC, &now);
++        if ((now.tv_sec - start.tv_sec) * 1000 +
++            (now.tv_nsec - start.tv_nsec) / 1000000 >= 5000) return -ETIMEDOUT;
++        usleep(10000);
++    }
++}
++
+ int voice_channel_start(void)
+ {
+     pthread_mutex_lock(&s_voice.lock);
+@@ -641,7 +676,8 @@ int voice_channel_start(void)
+ 
+         /* Wait for the speak thread to finish — speak_lock is held
+          * for the entire duration of voice_channel_speak(). */
+-        pthread_mutex_lock(&s_voice.speak_lock);
++        int lock_ret = qiji_lock_speech();
++        if (lock_ret) return lock_ret;
+         pthread_mutex_unlock(&s_voice.speak_lock);
+ 
+         syslog(LOG_INFO,
+@@ -740,8 +776,8 @@ int voice_channel_start(void)
+             s_voice.asr_stream = NULL;
+         }
+         pthread_mutex_unlock(&s_voice.lock);
+-        audio_capture_abort(s_voice.cap);
+         pthread_join(s_voice.rec_thread, NULL);
++        audio_capture_abort(s_voice.cap);
+         audio_capture_close(s_voice.cap);
+         s_voice.cap = NULL;
+         return -EIO;
+@@ -762,10 +798,9 @@ int voice_channel_stop(void)
+     s_voice.state = VOICE_STOPPING;
+     pthread_mutex_unlock(&s_voice.lock);
+ 
+-    audio_capture_abort(s_voice.cap);
+-
+-    /* Wait for recording thread to finish */
++    /* Qiji join the nonblocking reader before closing its PCM socket. */
+     pthread_join(s_voice.rec_thread, NULL);
++    audio_capture_abort(s_voice.cap);
+ 
+     /* Close capture device */
+     audio_capture_close(s_voice.cap);
+@@ -865,6 +900,9 @@ int voice_channel_stop_with_text(char* text_out, size_t text_cap)
+     }
+ 
+     text_out[0] = '\0';
++    struct timespec stop_start, stop_done;
++    clock_gettime(CLOCK_MONOTONIC, &stop_start);
++    syslog(LOG_INFO, "[%s] capture stop requested\n", TAG);
+ 
+     pthread_mutex_lock(&s_voice.lock);
+     if (s_voice.state != VOICE_RECORDING) {
+@@ -874,10 +912,14 @@ int voice_channel_stop_with_text(char* text_out, size_t text_cap)
+     s_voice.state = VOICE_STOPPING;
+     pthread_mutex_unlock(&s_voice.lock);
+ 
++    /* Qiji join the nonblocking reader before closing its PCM socket. */
++    pthread_join(s_voice.rec_thread, NULL);
+     audio_capture_abort(s_voice.cap);
+ 
+-    /* Wait for recording thread to finish */
+-    pthread_join(s_voice.rec_thread, NULL);
++    clock_gettime(CLOCK_MONOTONIC, &stop_done);
++    syslog(LOG_INFO, "[%s] capture stopped: %ldms\n", TAG,
++        (stop_done.tv_sec-stop_start.tv_sec)*1000 +
++        (stop_done.tv_nsec-stop_start.tv_nsec)/1000000);
+ 
+     /* Close capture device */
+     audio_capture_close(s_voice.cap);
+@@ -898,8 +940,12 @@ int voice_channel_stop_with_text(char* text_out, size_t text_cap)
+      * pcm_len may be 0 — that's OK, don't abort. */
+     if (stream) {
+         char text[512];
+-        int ret = voice_asr_stream_finish(stream, text,
+-            sizeof(text));
++        struct timespec begin, end;
++        clock_gettime(CLOCK_MONOTONIC, &begin);
++        int ret = voice_asr_stream_finish(stream, text, sizeof(text));
++        clock_gettime(CLOCK_MONOTONIC, &end);
++        syslog(LOG_INFO, "[%s] ASR finalize: %ldms rc=%d\n", TAG,
++            (end.tv_sec-begin.tv_sec)*1000+(end.tv_nsec-begin.tv_nsec)/1000000, ret);
+ 
+         free(s_voice.pcm_buf);
+         s_voice.pcm_buf = NULL;
+@@ -910,7 +956,7 @@ int voice_channel_stop_with_text(char* text_out, size_t text_cap)
+             strncpy(text_out, text, text_cap - 1);
+             text_out[text_cap - 1] = '\0';
+         }
+-        return 0;
++        return ret;
+     }
+ 
+     /* Batch fallback: synchronous ASR inline (no thread) */
+@@ -1007,7 +1053,8 @@ int voice_channel_speak(const char* text)
+     }
+     pthread_mutex_unlock(&s_voice.lock);
+ 
+-    pthread_mutex_lock(&s_voice.speak_lock);
++    int lock_ret = qiji_lock_speech();
++        if (lock_ret) return lock_ret;
+ 
+     /* ── AEC workaround: reject TTS while PTT is recording ── */
+     pthread_mutex_lock(&s_voice.lock);
+@@ -1075,12 +1122,20 @@ int voice_channel_speak(const char* text)
+     int ret = voice_tts_speak_stream(clean,
+         tts_stream_cb, pb);
+ 
++#ifdef CONFIG_GEMINI_CHAT_MINIMAL
++    extern void qiji_chat_audio_network_done(void);
++    qiji_chat_audio_network_done();
++#endif
++
+     struct timespec tts_net;
+     clock_gettime(CLOCK_MONOTONIC, &tts_net);
+     long net_ms = (tts_net.tv_sec - s_tts_start.tv_sec) * 1000
+         + (tts_net.tv_nsec - s_tts_start.tv_nsec) / 1000000;
+     syslog(LOG_INFO, "[%s] TTS network done: %ldms\n", TAG, net_ms);
+ 
++    extern int qiji_audio_playback_finish(audio_playback_t *);
++    if (!ret) ret = qiji_audio_playback_finish(pb);
++
+     /* Unregister active playback */
+     pthread_mutex_lock(&s_voice.lock);
+     s_voice.tts_pb = NULL;
+diff --git a/src/voice/voice_tts.c b/src/voice/voice_tts.c
+index 1eccad7..9013de1 100644
+--- a/src/voice/voice_tts.c
++++ b/src/voice/voice_tts.c
+@@ -110,6 +110,10 @@ int voice_tts_speak_stream(const char* text,
+         return -ENODEV;
+     }
+ 
++    extern int qiji_aliyun_tts_stream(const char *, voice_tts_chunk_cb, void *);
++    if (!strcmp(s_active->name, "aliyun"))
++        return qiji_aliyun_tts_stream(text, cb, user_data);
++    if (strcmp(s_active->name, "volcengine")) return -ENOTSUP;
+     return volc_tts_ws_synthesize_stream(text,
+         (volc_tts_chunk_cb)cb, user_data);
+ }

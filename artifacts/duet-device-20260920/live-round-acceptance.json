@@ -1,0 +1,212 @@
+{
+  "started_at": "2026-09-20T09:04:31.217227+00:00",
+  "action": "start",
+  "real_device_polls_only": true,
+  "initial": {
+    "state": "complete",
+    "topic": "忙碌之后，怎样安排一段轻松的休息",
+    "transcript": [
+      {
+        "speaker": "藤田琴音",
+        "text": "忙碌完先瘫半小时刷搞笑短视频呗，再啃袋冰可乐配的薯片，别想工作相关的事就好。"
+      },
+      {
+        "speaker": "小澄",
+        "text": "刷够半小时就停哦，之后可以拉上窗帘躺会儿，听点轻缓的纯音乐，别吃太咸的薯片呀。"
+      },
+      {
+        "speaker": "藤田琴音",
+        "text": "行吧行吧，那我换番茄味的薯片，躺的时候戴个眼罩，别被光晃得睡不着。"
+      },
+      {
+        "speaker": "小澄",
+        "text": "戴眼罩躺着的时候，要不要试试用香薰机喷点柑橘调的香氛？闻着会更放松些哦。"
+      },
+      {
+        "speaker": "藤田琴音",
+        "text": "柑橘调会不会太甜啊？要不先买小样试试？要是合适我再入正装，能省点钱嘛。"
+      },
+      {
+        "speaker": "小澄",
+        "text": "这个主意挺好的，选小样还能多试几种调调，挑到最合心意的再买正装，既省心又划算呀。"
+      }
+    ],
+    "summary": "主人，硬件伙伴本轮聊了忙碌后轻松休息的安排，包括瘫刷搞笑短视频、躺卧听轻缓纯音乐等，还提到选柑橘调香薰小样试后再入正装。建议你选小样试香、别吃太咸的薯片。请问你要不要试试先买香薰小样？",
+    "error": "",
+    "pending": {},
+    "demo": false,
+    "text_only": false,
+    "peers": {
+      "qiji": true,
+      "xiaocheng": true
+    },
+    "ready": {
+      "qiji": true,
+      "xiaocheng": true
+    }
+  },
+  "events": [
+    {
+      "elapsed_s": 0.02,
+      "snapshot": {
+        "state": "generating",
+        "topic": "忙碌之后，怎样用十分钟、不花钱放松一下？你们各提一个可选办法，最后由主人选择。",
+        "transcript": [],
+        "summary": "",
+        "error": "",
+        "pending": {},
+        "demo": false,
+        "text_only": false,
+        "peers": {
+          "qiji": true,
+          "xiaocheng": true
+        },
+        "ready": {
+          "qiji": true,
+          "xiaocheng": true
+        }
+      }
+    },
+    {
+      "elapsed_s": 1.02,
+      "snapshot": {
+        "state": "summarizing",
+        "topic": "忙碌之后，怎样用十分钟、不花钱放松一下？你们各提一个可选办法，最后由主人选择。",
+        "transcript": [],
+        "summary": "",
+        "error": "",
+        "pending": {},
+        "demo": false,
+        "text_only": false,
+        "peers": {
+          "qiji": true,
+          "xiaocheng": true
+        },
+        "ready": {
+          "qiji": true,
+          "xiaocheng": true
+        }
+      }
+    },
+    {
+      "elapsed_s": 2.04,
+      "snapshot": {
+        "state": "speaking",
+        "topic": "忙碌之后，怎样用十分钟、不花钱放松一下？你们各提一个可选办法，最后由主人选择。",
+        "transcript": [],
+        "summary": "",
+        "error": "",
+        "pending": {
+          "qiji": {
+            "seq": 8,
+            "kind": "turn",
+            "speaker": "qiji",
+            "text": "那我提个办法，找个没人的地方闭眼深呼吸，把脑子里的杂事都清掉，还能顺便想想下次怎么赚更多钱。",
+            "turn": 1,
+            "speaker_name": "藤田琴音",
+            "speak": true,
+            "audio": "",
+            "rate": 24000
+          },
+          "xiaocheng": {
+            "seq": 8,
+            "kind": "turn",
+            "speaker": "qiji",
+            "text": "那我提个办法，找个没人的地方闭眼深呼吸，把脑子里的杂事都清掉，还能顺便想想下次怎么赚更多钱。",
+            "turn": 1,
+            "speaker_name": "藤田琴音",
+            "speak": false,
+            "audio": "",
+            "rate": 24000
+          }
+        },
+        "demo": false,
+        "text_only": false,
+        "peers": {
+          "qiji": true,
+          "xiaocheng": true
+        },
+        "ready": {
+          "qiji": true,
+          "xiaocheng": true
+        }
+      }
+    },
+    {
+      "elapsed_s": 12.17,
+      "snapshot": {
+        "state": "summarizing",
+        "topic": "忙碌之后，怎样用十分钟、不花钱放松一下？你们各提一个可选办法，最后由主人选择。",
+        "transcript": [
+          {
+            "speaker": "藤田琴音",
+            "text": "那我提个办法，找个没人的地方闭眼深呼吸，把脑子里的杂事都清掉，还能顺便想想下次怎么赚更多钱。"
+          }
+        ],
+        "summary": "",
+        "error": "",
+        "pending": {},
+        "demo": false,
+        "text_only": false,
+        "peers": {
+          "qiji": true,
+          "xiaocheng": true
+        },
+        "ready": {
+          "qiji": true,
+          "xiaocheng": true
+        }
+      }
+    },
+    {
+      "elapsed_s": 13.19,
+      "snapshot": {
+        "state": "stopped",
+        "topic": "忙碌之后，怎样用十分钟、不花钱放松一下？你们各提一个可选办法，最后由主人选择。",
+        "transcript": [
+          {
+            "speaker": "藤田琴音",
+            "text": "那我提个办法，找个没人的地方闭眼深呼吸，把脑子里的杂事都清掉，还能顺便想想下次怎么赚更多钱。"
+          }
+        ],
+        "summary": "",
+        "error": "生成或语音服务失败：HTTPError",
+        "pending": {},
+        "demo": false,
+        "text_only": false,
+        "peers": {
+          "qiji": true,
+          "xiaocheng": true
+        },
+        "ready": {
+          "qiji": true,
+          "xiaocheng": true
+        }
+      }
+    }
+  ],
+  "final": {
+    "state": "stopped",
+    "topic": "忙碌之后，怎样用十分钟、不花钱放松一下？你们各提一个可选办法，最后由主人选择。",
+    "transcript": [
+      {
+        "speaker": "藤田琴音",
+        "text": "那我提个办法，找个没人的地方闭眼深呼吸，把脑子里的杂事都清掉，还能顺便想想下次怎么赚更多钱。"
+      }
+    ],
+    "summary": "",
+    "error": "生成或语音服务失败：HTTPError",
+    "pending": {},
+    "demo": false,
+    "text_only": false,
+    "peers": {
+      "qiji": true,
+      "xiaocheng": true
+    },
+    "ready": {
+      "qiji": true,
+      "xiaocheng": true
+    }
+  },
+  "elapsed_s": 13.19
+}

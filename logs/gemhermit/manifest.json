@@ -2,8 +2,8 @@
   "schema_version": "1.0",
   "team_id": "contest2026_236_wuxianshanyaoqiji",
   "github_login": "gemhermit",
-  "generator": "qiji-codex-visible-backfill@1.0",
-  "updated_at": "2026-09-19T15:26:34.234760+00:00",
+  "generator": "qiji-codex-visible-backfill@1.0+timestamp-append",
+  "updated_at": "2026-09-20T12:09:10.272291+00:00",
   "sessions": [
     {
       "session_id": "01a0b331-42b4-7171-b6ff-e46a27ff56f3",
@@ -225,12 +225,12 @@
       "session_id": "01a0b568-b229-7ce3-b2f2-76fe95d018ff",
       "tool": "codex",
       "started_at": "2026-09-18T18:48:29.676Z",
-      "last_event_at": "2026-09-19T15:26:32.963Z",
-      "event_count": 1153,
-      "file_path": "logs/gemhermit/2026-09-18/codex__01a0b568-b229-7ce3-b2f2-76fe95d018ff.jsonl",
+      "last_event_at": "2026-09-20T12:09:06.298Z",
+      "event_count": 1257,
+      "file_path": "logs/gemhermit/2026-09-20/codex__01a0b568-b229-7ce3-b2f2-76fe95d018ff.jsonl",
       "collection_mode": "vscode_extension_partial",
       "health": "degraded",
-      "data_completeness_warning": "Explicit project-scoped recovery of Codex Desktop native source=vscode. Visible user/assistant text and paired tool events only; internal reasoning, system/developer instructions, compaction, binary media, duplicate event_msg records and other-session segments are excluded. Secrets redacted during export. Historical workspace is outside .repo; not an official automatic capture, not a claim of contest eligibility or full work hours.",
+      "data_completeness_warning": "Explicit project-scoped recovery of Codex Desktop native source=vscode. Visible user/assistant text and paired tool events only; internal reasoning, system/developer instructions, compaction, binary media, duplicate event_msg records and other-session segments are excluded. Secrets redacted during export. Historical workspace is outside .repo; not an official automatic capture, not a claim of contest eligibility or full work hours. Earlier archived bytes retained because current native snapshot is compacted; only events strictly after the archived timestamp are appended, with continuous sequence numbers. This does not recover events lost before this snapshot.",
       "capture_method": "manual-native-visible-backfill",
       "source_originator": "Codex Desktop",
       "original_cwd": "\\\\?\\E:\\Project\\website\\contest2026_236_wuxianshanyaoqiji",
@@ -246,7 +246,117 @@
         "main_size": 14636829,
         "captured_at": "2026-09-19T15:26:35.239450+00:00"
       },
-      "export_sha256": "8c4f091e38afba3fea6476ae501e09afa687e40a87f2b602d5289b993c7baaf1"
+      "export_sha256": "ca3d9beeedbd4efafbf4248d73df3a4da7bfb1b50ccb926350e2dbc595ee0308",
+      "source_snapshots": [
+        {
+          "source_integrity": {
+            "main_sha256": "f018deb3f242c49f6bbc6c1de709d29e11574a18e50976792575c1bf5baca33b",
+            "main_size": 14636829,
+            "captured_at": "2026-09-19T15:26:35.239450+00:00"
+          },
+          "last_event_at": "2026-09-19T15:26:32.963Z"
+        },
+        {
+          "source_integrity": {
+            "main_sha256": "9a5fe36a241ea17f797fd14d0bdcf3f8b47f9491d6b956df80d87d6883402f42",
+            "main_size": 1515395,
+            "captured_at": "2026-09-20T12:09:11.381200+00:00"
+          },
+          "last_event_at": "2026-09-20T12:09:06.298Z",
+          "omitted_record_counts": {
+            "non_response_records_omitted": 207,
+            "private_context_omitted": 7,
+            "reasoning_or_other_items_omitted": 25,
+            "private_messages_omitted": 1
+          },
+          "redacted_count_total": 2
+        }
+      ],
+      "export_files": {
+        "logs/gemhermit/2026-09-18/codex__01a0b568-b229-7ce3-b2f2-76fe95d018ff.jsonl": "8c4f091e38afba3fea6476ae501e09afa687e40a87f2b602d5289b993c7baaf1",
+        "logs/gemhermit/2026-09-20/codex__01a0b568-b229-7ce3-b2f2-76fe95d018ff.jsonl": "ca3d9beeedbd4efafbf4248d73df3a4da7bfb1b50ccb926350e2dbc595ee0308"
+      }
+    },
+    {
+      "session_id": "01a0bad9-9555-7bd0-8f5a-3064f47428bb",
+      "tool": "codex",
+      "started_at": "2026-09-19T18:07:24.070Z",
+      "last_event_at": "2026-09-19T18:34:46.212Z",
+      "event_count": 91,
+      "file_path": "logs/gemhermit/2026-09-19/codex__01a0bad9-9555-7bd0-8f5a-3064f47428bb.jsonl",
+      "collection_mode": "vscode_extension_partial",
+      "health": "degraded",
+      "data_completeness_warning": "Explicit project-scoped recovery of Codex Desktop native source=vscode. Visible user/assistant text and paired tool events only; internal reasoning, system/developer instructions, compaction, binary media, duplicate event_msg records and other-session segments are excluded. Secrets redacted during export. Historical workspace is outside .repo; not an official automatic capture, not a claim of contest eligibility or full work hours.",
+      "capture_method": "manual-native-visible-backfill",
+      "source_originator": "Codex Desktop",
+      "original_cwd": "\\\\?\\E:\\Project\\website\\contest2026_236_wuxianshanyaoqiji",
+      "omitted_record_counts": {
+        "non_response_records_omitted": 217,
+        "private_messages_omitted": 3,
+        "private_context_omitted": 1,
+        "reasoning_or_other_items_omitted": 38
+      },
+      "redacted_count_total": 3,
+      "source_integrity": {
+        "main_sha256": "5d7997ec63495b6665921dac84cc9803ee888832b389ed89a66fb714561dc648",
+        "main_size": 4888009,
+        "captured_at": "2026-09-20T12:09:11.551471+00:00"
+      },
+      "export_sha256": "e4dcdbba969aa0d13897b5dbb6228b14a469a3aef12e6fa1addaaee06da60914"
+    },
+    {
+      "session_id": "01a0bafe-b133-7600-bd07-6357505b1c13",
+      "tool": "codex",
+      "started_at": "2026-09-19T18:49:24.927Z",
+      "last_event_at": "2026-09-20T11:58:27.941Z",
+      "event_count": 560,
+      "file_path": "logs/gemhermit/2026-09-19/codex__01a0bafe-b133-7600-bd07-6357505b1c13.jsonl",
+      "collection_mode": "vscode_extension_partial",
+      "health": "degraded",
+      "data_completeness_warning": "Explicit project-scoped recovery of Codex Desktop native source=vscode. Visible user/assistant text and paired tool events only; internal reasoning, system/developer instructions, compaction, binary media, duplicate event_msg records and other-session segments are excluded. Secrets redacted during export. Historical workspace is outside .repo; not an official automatic capture, not a claim of contest eligibility or full work hours.",
+      "capture_method": "manual-native-visible-backfill",
+      "source_originator": "Codex Desktop",
+      "original_cwd": "\\\\?\\E:\\Project\\website\\contest2026_236_wuxianshanyaoqiji",
+      "omitted_record_counts": {
+        "non_response_records_omitted": 1192,
+        "private_messages_omitted": 4,
+        "private_context_omitted": 15,
+        "reasoning_or_other_items_omitted": 230
+      },
+      "redacted_count_total": 15,
+      "source_integrity": {
+        "main_sha256": "b6250a39ca2b36a52672e8383f924f74f73b392fe4228c9b2a005971fd9025c5",
+        "main_size": 9225867,
+        "captured_at": "2026-09-20T12:09:14.219877+00:00"
+      },
+      "export_sha256": "778ec4b53f6cd635909adc3d065ef60cd11258ad1d227aa1a984090a02adab7f"
+    },
+    {
+      "session_id": "01a0bd83-3ad8-7110-9c34-5d5c2c80b759",
+      "tool": "codex",
+      "started_at": "2026-09-20T06:34:54.434Z",
+      "last_event_at": "2026-09-20T06:36:20.802Z",
+      "event_count": 11,
+      "file_path": "logs/gemhermit/2026-09-20/codex__01a0bd83-3ad8-7110-9c34-5d5c2c80b759.jsonl",
+      "collection_mode": "vscode_extension_partial",
+      "health": "degraded",
+      "data_completeness_warning": "Explicit project-scoped recovery of Codex Desktop native source=vscode. Visible user/assistant text and paired tool events only; internal reasoning, system/developer instructions, compaction, binary media, duplicate event_msg records and other-session segments are excluded. Secrets redacted during export. Historical workspace is outside .repo; not an official automatic capture, not a claim of contest eligibility or full work hours.",
+      "capture_method": "manual-native-visible-backfill",
+      "source_originator": "Codex Desktop",
+      "original_cwd": "\\\\?\\E:\\Project\\website\\contest2026_236_wuxianshanyaoqiji",
+      "omitted_record_counts": {
+        "non_response_records_omitted": 20,
+        "private_context_omitted": 1,
+        "reasoning_or_other_items_omitted": 4,
+        "private_messages_omitted": 1
+      },
+      "redacted_count_total": 0,
+      "source_integrity": {
+        "main_sha256": "380a89b31885d59de3f4d5c4304e0e8d7c53c22809da8b6f31ebda6ccc25b498",
+        "main_size": 68921,
+        "captured_at": "2026-09-20T12:09:14.412696+00:00"
+      },
+      "export_sha256": "d5ffbf4e234fb5bae3f1328c38db87d48ee0715bae4210199df2ae4101017552"
     }
   ]
 }

@@ -1,3 +1,5 @@
+> 历史记录，不作为当前 Gemini-S1 固件构建入口。当前成果与复现流程见项目 docs/build-pack-guide.md；旧配置及脚本已停用。
+
 # 开发记录：Gemini-S1 编译环境搭建与基础固件编译
 
 > 队伍编号：236（无险山妖气迹）
@@ -121,6 +123,15 @@ Gemini-S1 提供多个配置：
 
 > 备注：仓库内的提交 `a6c66430`（`vendor/allwinnertech` 仓库）描述了官方启用 QuickApp 的配置对（依赖 `libs_openvela_vela/armv7a_cmake` 下的 `libquickapp.a` 等）。当前大赛分支缺库，故本阶段选择最小化方案。
 
+> **⚠️ 更正（2026-09-15）**：上面"MEDIA / FEATURE_FRAMEWORK **都**硬编码依赖 QuickApp 头文件"的表述不准确，把两个不同性质的问题捆在了一起。实测结论：
+>
+> - **FEATURE_FRAMEWORK 确实硬依赖 QuickJS** —— `frameworks/runtimes/feature/Kconfig` 里写明了 `depends on INTERPRETERS_QUICKJS`。关它是对的。
+> - **MEDIA 并不依赖 QuickApp** —— `config MEDIA` 是 `tristate`，无任何 `select`/`depends on` 指向 QuickApp；`media/Make.defs` 只把它自己和 `pfw/` 加进构建，不含 `feature/`；当前树里 `media/pfw/` 已有 14 个成功编译的 `.o`。
+> - 当时那个 `frameworks/multimedia/media/feature/audio_impl.c:816 HAP_APP_PATH 未定义` 报错，根因是同时开着 QuickJS 一簇：`media/feature/` 下全是 `.jidl`（`audio.jidl`/`record.jidl`/`session.jidl`），那是 media 框架**给 JS 运行时用的绑定层**，只在 JS 引擎开启时才参与构建。
+> - **因此 `CONFIG_MEDIA` / `CONFIG_MEDIA_SERVER` 必须开启**，它正是 ai_agent 录音/播放路径的依赖（官方 `packages/ai_agent/defconfigs/gemini-s1/gemini-s1_defconfig` 中 `CONFIG_MEDIA=y` 且完全没有 `CONFIG_QUICKAPP`）。
+>
+> 完整依据与链接期症状速查见 [anime-voice-quickstart.md](anime-voice-quickstart.md) 第四节。
+
 ---
 
 ## 五、解决方案：编译最小 NSH 固件
@@ -211,4 +222,72 @@ repo sync -j4 -c --prune --no-tags
 
 # 清理后全新编译
 ./build.sh vendor/allwinnertech/boards/r528/r528s3-gemini-s1/configs/nsh/ distclean -j8
+```
+
+---
+
+## 八、烧录阶段（2.8 寸 SPI 屏固件打包与烧录准备）
+
+> **2026-09-15 更新**：本节记录的早期打包方式存在严重问题（DDR 参数被误改、nsh.fex 绑错分区），已按 GitHub 官方流程从头重建并全部查清修复。**最新完整流程、原理与踩坑分析见 [build-pack-guide.md](build-pack-guide.md)**，最终可用镜像为 `firmware/rtos_nuttx_r528s3-gemini-s1_uart0_official.img`（MD5 `e70379f56d36de6f02992c2594e5cadc`）。以下保留为历史过程记录。
+
+> 本阶段目标：把 `nsh_minidisplay` 固件打包成 PhoenixSuit 可烧录镜像，并完成烧录前的排查与工具准备。
+> 时间：2026-09-07 ~ 09-09
+
+### 8.1 板子与 NAND 容量确认
+
+- **板卡**：润芯微 Gemini-S1（全志 R528 双核 Cortex-A7，1.2GHz；RAM 128MB DDR3）
+- **NAND FLASH**：**256MB SPI NAND**，型号 **Winbond W25N02KVZEIR（2Gbit）** ← 官方《硬件说明》确认
+- 板载 2.8 寸 SPI 屏（ILI9341），也支持 7 寸 MIPI 大屏
+- 判断历史的坑：此前 SDK `dummy_1=262144`、板端 MTD 到 ~122 曾误导为 128M；以官方文档为准是 **256MB**
+
+### 8.2 编译连带排查（重要结论）
+
+- `nsh_minidisplay` 首次编译实际**失败**（后台任务通知的 exit 0 是误报，查日志为链接失败）：
+  - `ld: cannot find .../boards/vela/libs/armv7a_cmake/libquickapp.a` 等 8 个库
+  - 根因：`vendor_openvela` 当前分支**根本没有这些 QuickApp 预编译库**（仅在 `.gitattributes` 声明 LFS 规则，`git ls-tree` 无该目录，`git lfs pull` 拉不到）。大赛分支 `libs_openvela_vela` checkout 失败被文档当作“不影响编译”而忽略，实际对需要 QuickApp 的 `nsh_minidisplay` 是致命的。
+- **解决方案**（与 `nsh` 对齐）：关闭 QuickApp 框架
+  - 修改 `configs/nsh_minidisplay/defconfig`：`MEDIA / FEATURE_FRAMEWORK / QUICKAPP / QUICKAPP_VAPP` 置为 not set，删除其 PRIORITY/STACKSIZE 子项（已备份 `.bak`）
+  - 由此得到能驱动 ILI9341 SPI 屏的最小 NSH 固件：`vela.bin`（4.7MB）+ `nsh.fex`
+- 说明：若需完整 QuickApp/WebView 能力，必须从官方获取 `armv7a_cmake` 预编译库（本分支无法编译/下拉）。
+
+### 8.3 PhoenixSuit 镜像打包（三个根因的修复链）
+
+1. **布局容量不匹配**：`tools/scripts/pack_img.sh` 对 `r528s3-gemini-s1` **硬编码 `prepare_for_128Mnand`**，与 256MB NAND 不符 → 把该分支改为 `prepare_for_256Mnand`。
+2. **nsh 分区过小**：`update_mbr` 报 `dl file nsh.fex size too large / part_size = 2560`。修改 `board/r528s3/gemini-s1_nand/configs/sys_partition.fex`：
+   - `sst`：2560 → **16384** 扇区（8MB，容纳 4.7MB 固件）
+   - `usrdata`：425472 → 411648（净增补抵消，总量不变）
+3. **dragon 工具无法运行**：`tools/tool/dragon` 是 32 位 ELF，系统缺 32 位动态加载器 → 安装 `libc6:i386 libstdc++6:i386` 后正常。
+
+打包成功产出：
+- 镜像：`out/r528s3/gemini-s1_nand/rtos_nuttx_r528s3-gemini-s1_uart0_256Mnand.img`（26,599,424 B ≈ 26.6MB）
+- **MD5**：`60298e8309095cafa3f825ceb9f1ffdd`
+- **SHA256**：`a20d359a08dde44c901404e466fd64e95238713656f2f52141929dca8da63dda`
+- 已拷贝到 Windows：`firmware/rtos_nuttx_r528s3-gemini-s1_uart0_256Mnand.img`
+
+### 8.4 官方文档与资料（已本地保存）
+
+飞书 rivotek 官方文档（经 lark 授权拉取并本地化）：
+
+| 文件 | 说明 |
+|---|---|
+| `official/Gemini-S1-开发板.md` | 板卡概述、特性、文档导航 |
+| `official/软件烧录指南.md` | PhoenixSuit 烧录流程 |
+| `official/硬件说明.md` | 核心规格（**含 256M NAND 铁证**）、接口定义 |
+
+烧录工具已定位并解压到 `firmware/烧录工具/`：
+- PhoenixSuit：`PhoenixSuit\AllwinnertechPhoeniSuitRelease20201225\PhoenixSuit.exe`（安装器 `PhoenixInstall.exe`）
+- USB 驱动：`全志USB驱动\InstallUSBDrv.exe`（含 `UsbDriver\usbdrv.inf`）
+- 原始包在 Chrome 默认下载目录：`E:\多用户共享文件\下载\`（`AllwinnertechPhoeniSuitRelease20201225.zip.zip`、`全志USB烧录驱动20201229.zip`）
+
+### 8.5 烧录步骤（官方流程）
+
+1. 装 USB 驱动：管理员运行 `InstallUSBDrv.exe`（Win11 代码10 → 设备管理器“通用串行总线控制器”从磁盘安装 `usbdrv.inf`）
+2. 运行 `PhoenixSuit.exe` → 一键刷机 → 选择 `rtos_nuttx_r528s3-gemini-s1_uart0_256Mnand.img` → 选**全盘擦除升级**
+3. 板进 FEL：Type-C 连电脑 → 按住 FEL → 按 RESET 复位 → 电脑出现 `USB Device (VID_1f3a_PID_efe8)` 后松开 FEL → 自动烧录
+4. 烧完关闭 PhoenixSuit，板子自动重启进新固件
+
+### 8.6 遗留/后续
+- [ ] 实际烧录并验证 2.8 寸屏是否点亮、NSH 能否交互
+- [ ] 若要做 webview / Live2D webui，需先从大赛官方补齐 QuickApp `armv7a_cmake` 预编译库并重新配置编译
+- [ ] 围绕「二次元 + NFC 互动 + AI Passport」实现应用并集成
 ```

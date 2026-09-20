@@ -1,0 +1,14 @@
+{
+  "version": "xiaocheng-0.1-config-fix",
+  "sha256": "7158ae338619c4d242b92b34d3c72fffe2fb346a4fef9bc5740585133786cd05",
+  "app_elf_sha256": "08fcb6250c2739eef5135293fadad00aac25d305fe0f1ab266fd8390fd718362",
+  "Build": "PASS",
+  "Host tests": "PASS (full gate and fragmented USB configuration regression)",
+  "Device tests": "NOT RUN",
+  "change": "Retain USB configuration fragments until LF; reject oversized and NUL-containing frames",
+  "app_offset": "0x10000",
+  "segmented_update_preserves_nvs": true,
+  "partition_matches_installed_overlay": true,
+  "bootloader": "Keep installed ESP-IDF 5.5.3 bootloader; application-only update",
+  "app_image_sha256": "89f6aa9543dbc8b5d3237a55326f47d5579da3253a288ceb6db837e2e0512cd5"
+}

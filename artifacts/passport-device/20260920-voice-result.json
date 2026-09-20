@@ -1,0 +1,37 @@
+{
+  "version": "xiaocheng-0.3-voice",
+  "app_sha256": "d9b92f487e3933fe9a43dcfeaa147453887678b7d33cc7fdea6809eaf7095923",
+  "elf_sha256": "2cbe0686a6abb44b6d09a0c4dcbfb1363a04a54693777fcd53650efb7a1babe5",
+  "port": "COM3",
+  "offset": "0x10000",
+  "application_bytes": 4091760,
+  "Build": "PASS",
+  "Host tests": "PASS: 21 tests; real cloud and HTTP synthetic voice tests",
+  "flash": "PASS: esptool write and hash verification",
+  "startup_observation_seconds": 30,
+  "startup_bytes": 4764,
+  "crash_detected": false,
+  "startup_evidence": [
+    "I (700) app_init: App version:      855d210-dirty",
+    "I (700) app_init: ELF file SHA256:  2cbe0686a...",
+    "I (704) main_task: Calling app_main()",
+    "Xiaocheng 0.1 started; free heap=92204",
+    "I (1273) main_task: Returned from app_main()",
+    "I (1619) wifi:connected with 2F, aid = 13, channel 2, BW20, bssid = 74:86:6f:79:68:f7"
+  ],
+  "NVS": "not written; application-only update with matching partition table",
+  "Device tests": "PASS: startup, Wi-Fi, middle-button recording and spoken AI reply (user-confirmed)",
+  "Unverified": [
+    "cancel during playback",
+    "long-duration voice stress"
+  ],
+  "coordinator_online": true,
+  "live_service": true,
+  "additional_observation_seconds": 45,
+  "additional_crash_detected": false,
+  "additional_error_lines": [
+    "E (109192) i2s_common: i2s_channel_disable(1262): the channel has not been enabled yet",
+    "E (109193) i2s_common: i2s_channel_disable(1262): the channel has not been enabled yet"
+  ],
+  "user_acceptance": "PASS: user confirmed recording, recognition and audible AI reply work"
+}

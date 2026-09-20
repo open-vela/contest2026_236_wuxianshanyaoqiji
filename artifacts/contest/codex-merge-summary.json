@@ -1,0 +1,8 @@
+{
+  "sessions": 12,
+  "events": 2532,
+  "added_events": 766,
+  "jsonl_files": 13,
+  "candidate_snapshot": "2026-09-20T12:09:10.272291+00:00",
+  "strategy": "Preserve prior exports byte-for-byte; append events newer than archived last_event_at; add new sessions. Current compacted snapshots are partial."
+}
