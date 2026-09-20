@@ -1,5 +1,7 @@
 # OpenEVLA 二次元硬件初始化
 
+> 2026-09-20 校注：队伍编号 236，正式队名为“无限闪耀绮迹”。下文为原始对话留档，其中早期队名转写不准确，以此校注为准。
+
 [TraeWork](https://www.trae.cn/ide/download?auto=1&product_type=work&utm_source=content&utm_medium=session_share_download&utm_campaign=try_traework&utm_content=artifact_marker)
 
 September 9, 2026·Content is AI-generated and may not be fully accurate
