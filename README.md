@@ -1,8 +1,10 @@
+> 2026-09-20 官方模板版材料：[技术报告](docs/contest/技术报告.md)、[提交清单](docs/contest/提交清单.md)。队伍为“无限闪耀绮迹”，成员分工已更新；本次压缩包仅含报告与录像等附件，源码和 AI Coding 日志按模板留在本仓。
+
 # 绮迹：桌面与随身双硬件 AI 伙伴
 
 当前提交材料：[作品介绍](docs/contest/作品介绍.md) · [架构与系统关系](docs/contest/架构与运行.md) · [验收与问题](docs/contest/验收与问题清单.md) · [提交清单](docs/contest/提交清单.md) · [视频入口](docs/contest/视频说明.md)。
 
-**Gemini-S1 运行 openvela / NuttX；AI Passport 运行 ESP-IDF 5.5.3，是外部配套终端，未移植 openvela。** 两者通过电脑协调服务联动；双机模式的文字生成由电脑调用云端。实测一次六次交替发言及总结约 110 秒，后续云端识别额度与服务线程故障仍见问题清单。视频已由用户录制，待用户上传。最新源码、材料与脱敏日志通过 [PR #2](https://github.com/open-vela/contest2026_236_wuxianshanyaoqiji/pull/2) 统一提交，检查与合并状态以该页面为准。下文包含历史迭代说明，以本段材料索引为当前状态入口。
+**Gemini-S1 运行 openvela / NuttX；AI Passport 运行 ESP-IDF 5.5.3，是外部配套终端，未移植 openvela。** 两者通过电脑协调服务联动；双机模式的文字生成由电脑调用云端。实测一次六次交替发言及总结约 110 秒，后续云端识别额度与服务线程故障仍见问题清单。视频已由用户录制，待用户上传。功能源码及脱敏日志通过 [PR #2](https://github.com/open-vela/contest2026_236_wuxianshanyaoqiji/pull/2) 合入；最新报告及队名通过后续材料 PR 更新。下文包含历史迭代说明，以本段材料索引为当前状态入口。
 
 新增双硬件伙伴原型：[琴音 × AI Passport 小澄](docs/passport-companion.zh_CN.md)。小澄使用独立简笔角色，双方联网后轮流聊天并给主人总结；首版需要电脑协调服务，实物联动尚待烧录验收。
 
@@ -32,7 +34,7 @@ PowerShell 7 中运行 `./tools/restore_board_config.ps1` 恢复网络和 Key；
 
 ## 工程沿革与复现资料
 
-队伍：236 无险山妖气迹。硬件：Gemini-S1 / R528 + 2.8 寸 ILI9341 SPI 屏。
+队伍：236 无限闪耀绮迹。硬件：Gemini-S1 / R528 + 2.8 寸 ILI9341 SPI 屏。
 
 当前界面：[图标与统一间距](docs/icon-ui-20260920.md)，产物 `firmware/icon-ui-20260920`。继承[图片动作与朗读滚动](docs/sprite-ui-20260920.md)，旧产物 `firmware/sprite-ui-20260920` 保留。继承[实体 ENTER、时间与版本](docs/enter-ui-20260920.md)，旧产物 `firmware/enter-ui-20260920` 保留。继承[竖屏状态轮播与角色对话叠层](docs/portrait-20260919.md)，旧版保留在 `firmware/portrait-20260919`。
 

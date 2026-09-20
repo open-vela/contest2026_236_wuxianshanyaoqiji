@@ -1,0 +1,47 @@
+{
+  "archive": "无限闪耀绮迹-绮迹-contest2026_236_wuxianshanyaoqiji.zip",
+  "archive_bytes": 39273059,
+  "archive_sha256": "5dd5d8cc676262ebef3de2064a0c9951989afccf72416cba96a259217a0f8a2f",
+  "template_sha256": "94247bfe0ed960629b138108316dccdd2827761bbe9cc8d5fe48e1c78ad396a8",
+  "report_pages": 15,
+  "tables": 15,
+  "diagrams": 3,
+  "abstract_characters": 254,
+  "revision": 5,
+  "nfc_status": "Planned, not implemented",
+  "team_name": "无限闪耀绮迹",
+  "members": [
+    "张熙哲",
+    "彭馨怡"
+  ],
+  "source_and_logs_in_zip": false,
+  "photos_in_zip": false,
+  "video_bytes_preserved": true,
+  "video_sha256": "ea853620529c07a3520a3762d0af391d6bb5a0835151075e8d357b27821fd4fd",
+  "video_duration_seconds": 235.937007,
+  "docx_pdf_fields": "PASS",
+  "credential_pattern_scan": "PASS (document text; not video frames/audio)",
+  "zip_hashes_and_integrity": "PASS",
+  "files": 5,
+  "status": "Local review package, not uploaded",
+  "remaining_template_gaps": [
+    "Hardware photos deferred by user",
+    "Runtime Skill deployment and trigger evidence missing"
+  ],
+  "notes": [
+    "Partial AI log acceptance unconfirmed",
+    "Character derivative rights not claimed",
+    "Unmeasured metrics stated explicitly"
+  ],
+  "table_header_pagination": "keep header with first row",
+  "video_source": "20260920-224901.mp4",
+  "video_edited_by_user": true,
+  "video_dimensions": [
+    960,
+    540
+  ],
+  "video_audio_channels": 2,
+  "video_bytes": 37638705,
+  "video_full_decode": "PASS ffmpeg -xerror exit 0",
+  "video_revision": 2
+}
